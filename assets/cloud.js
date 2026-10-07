@@ -2,7 +2,8 @@
 window.Cloud=(()=>{
  const cfg=window.SQL_CONFIG;
  const client=window.supabase.createClient(cfg.url,cfg.publishableKey,{auth:{storageKey:'lsts-learning-auth',persistSession:true,autoRefreshToken:true}});
- const api={client,user:null,profile:null,role:'student',enrollment:null,lessons:[],states:{},revisions:{},pending:{},conflicts:{},ready:false};
+ const catalog=structuredClone(window.SQL_COURSE.lessons);
+ const api={contentLoaded:false,client,user:null,profile:null,role:'student',enrollment:null,lessons:[],states:{},revisions:{},pending:{},conflicts:{},ready:false};
  let flushing=false,generation=0,hydration=null;
  const status=t=>document.querySelector('#sync').textContent=t;
  const emit=()=>window.dispatchEvent(new Event('cloud-change'));
@@ -10,13 +11,15 @@ window.Cloud=(()=>{
  const store=()=>{if(api.user&&api.enrollment)try{localStorage.setItem(storageKey(),JSON.stringify({pending:api.pending,states:api.states,revisions:api.revisions}))}catch{status('Bộ nhớ máy đầy · hãy lưu trước khi đóng trang')}};
  const fail=({data,error})=>{if(error)throw error;return data};
  const snapshot=x=>JSON.parse(JSON.stringify(x));
- function reset(){generation++;api.user=null;api.profile=null;api.role='student';api.enrollment=null;api.states={};api.revisions={};api.pending={};api.conflicts={};api.ready=false;status('Chế độ khám phá · đăng nhập để lưu tiến độ');emit()}
+ function reset(){generation++;api.contentLoaded=false;window.SQL_COURSE.lessons=structuredClone(catalog);window.SQL_COURSE.seed='';api.user=null;api.profile=null;api.role='student';api.enrollment=null;api.states={};api.revisions={};api.pending={};api.conflicts={};api.ready=false;status('Đăng ký / đăng nhập để vào học');emit()}
  async function hydrate(user){
-  const ticket=++generation;api.ready=false;api.user=user;status('Đang tải tiến độ tài khoản…');
+  const ticket=++generation;api.ready=false;api.contentLoaded=false;api.user=user;status('Đang tải tiến độ tài khoản…');
   const profile=fail(await client.from('learning_profiles').select('*').eq('user_id',user.id).single());
   const role=fail(await client.rpc('learning_staff_access',{p_run:cfg.runId}));
   const enrollment=fail(await client.rpc('learning_enroll',{p_run:cfg.runId}));
   const rows=fail(await client.from('learning_progress').select('lesson_id,state,revision').eq('enrollment_id',enrollment.enrollment_id));
+  const content=fail(await client.from('learning_content').select('lesson_id,payload').eq('course_id',cfg.courseId));
+  if(content.length!==catalog.length)throw Error('Tài khoản chưa được cấp nội dung khóa này. Liên hệ giáo viên.');
   if(ticket!==generation)return;
   api.profile=profile;api.role=role;api.enrollment=enrollment;api.states={};api.revisions={};api.pending={};api.conflicts={};
   for(const r of rows){api.states[r.lesson_id]=r.state;api.revisions[r.lesson_id]=r.revision}
@@ -25,12 +28,15 @@ window.Cloud=(()=>{
     api.pending[id]=p;api.states[id]=p.state;
    }
   }catch{}
+  window.SQL_COURSE.lessons=catalog.map(l=>content.find(r=>r.payload.lesson.key===l.key)?.payload.lesson);
+  if(window.SQL_COURSE.lessons.some(l=>!l))throw Error('Nội dung khóa chưa đầy đủ.');
+  window.SQL_COURSE.seed=content[0].payload.seed;api.contentLoaded=true;
   api.ready=true;store();status('Đã tải tiến độ từ tài khoản');emit();await api.flush();
  }
  api.init=async()=>{
   api.lessons=fail(await client.from('learning_lessons').select('lesson_id,lesson_key,content_version').eq('course_id',cfg.courseId).eq('content_version',1));
   const session=fail(await client.auth.getSession())?.session;
-  if(session)await hydrate(session.user);else{api.ready=true;emit()}
+  if(session){const verified=fail(await client.auth.getUser()).user;if(!verified)throw Error('Phiên đăng nhập không hợp lệ.');await hydrate(verified)}else{api.ready=true;status('Đăng ký / đăng nhập để vào học');emit()}
   client.auth.onAuthStateChange((event,session)=>{
    if(event==='SIGNED_OUT'){reset();api.ready=true;return}
    if(session&&session.user.id!==api.user?.id){
@@ -84,9 +90,9 @@ window.Cloud=(()=>{
  };
  api.signIn=async(email,password)=>{
   if(!api.lessons.length)api.lessons=fail(await client.from('learning_lessons').select('lesson_id,lesson_key,content_version').eq('course_id',cfg.courseId).eq('content_version',1));
-  fail(await client.auth.signInWithPassword({email,password}));
+  const signed=fail(await client.auth.signInWithPassword({email,password}));
   if(hydration)await hydration;
-  if(!api.ready)await hydrate(fail(await client.auth.getUser()).user);
+  if(!api.ready||!api.contentLoaded||api.user?.id!==signed.user.id)await hydrate(fail(await client.auth.getUser()).user);
  };
  api.signUp=async(sid,name,cls,family,password)=>{
   if(!/^\d{7}$/.test(sid))throw Error('Mã học sinh phải gồm đúng 7 chữ số.');
