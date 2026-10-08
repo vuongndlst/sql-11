@@ -77,6 +77,7 @@
   TT.qua = TT.qua || 0;
   TT.passedStages = Array.isArray(TT.passedStages) ? TT.passedStages : Array.from({length:Math.min(TT.qua,B.chang.length)},function(_,i){return i;});
   TT.finalPassed = Boolean(TT.finalPassed || TT.dat);
+  if(TT.dat){TT.qua=B.chang.length;TT.passedStages=B.chang.map(function(_,i){return i;});}else{TT.qua=0;while(TT.passedStages.includes(TT.qua)&&TT.qua<B.chang.length)TT.qua++;}
   TT.tl = TT.tl || {};          // câu trả lời đang làm: {id câu: chuỗi trả lời}
   TT.cuon = TT.cuon || {};      // vị trí cuộn từng chặng
   TT.lich_su = TT.lich_su || []; // [{ngay, diem}]
@@ -132,12 +133,12 @@
       var b = el("button", { text: (TT.passedStages.includes(i) ? "✓ " : "") + (i + 1) + ". " + c.ten_ngan, onclick: function () { moChang(i); } });
       if (TT.passedStages.includes(i)) b.className = "xong";
       if (i === dang) b.className = "dang";
-      if (i > TT.qua && !window.PORTAL_SELF_STUDY) b.disabled = true;
+      if (i > TT.qua && !window.PORTAL_FREE_NAV) b.disabled = true;
       wrap.appendChild(b);
     });
     var bc = el("button", { text: (TT.dat ? "✓ " : "") + "Checkpoint cuối", onclick: moCuoi });
     if (dang === "cuoi") bc.className = "dang";
-    if (TT.qua < B.chang.length && !window.PORTAL_SELF_STUDY) bc.disabled = true;
+    if (TT.qua < B.chang.length && !window.PORTAL_FREE_NAV) bc.disabled = true;
     wrap.appendChild(bc);
     return wrap;
   }
@@ -735,6 +736,7 @@
   // ------------------------------------------------------------ một chặng
   function moChang(i) {
     if (!TT.ten) { moDau(); return; }
+    i=Math.max(0,Math.min(i,TT.dat?B.chang.length-1:TT.qua));
     changDang = i;
     capNhatDau();
     main.innerHTML = "";
@@ -765,7 +767,7 @@
     ck.appendChild(el("h2", { text: "Kiểm tra nhanh" }));
     ck.appendChild(el("p", { text: TT.passedStages.includes(i) ? "Con đã qua chặng này. Có thể làm lại để ôn." :
       "Trả lời đúng tất cả để ghi nhận hoàn thành chặng. Sai lần đầu: đọc gợi ý. Sai từ lần hai: xem lời giải chi tiết." }));
-    var cau = c.checkpoint.map(function (q, j) { var v = veCau(q, j + 1, true); ck.appendChild(v.node); return v; });
+    var hopes=[];var cau = c.checkpoint.map(function (q, j) { var v = veCau(q, j + 1, true);ck.appendChild(v.node);hopes.push(HopeStars.mount(v.node,TT,'stage-'+i,q.id,TT.passedStages.includes(i),ghi));return v; });
     var tb = el("span", { class: "thong-bao" });
     var tiep = el("button", { class: "nut", text: NHUNG ? (DUNG_SAU_CHANG ? "Về thế giới 3D — dừng trao đổi" : "Về thế giới 3D — sang trạm tiếp →") :
       i + 1 < B.chang.length ? "Sang chặng " + (i + 2) + " →" : "Vào checkpoint cuối →",
@@ -773,10 +775,10 @@
         if (NHUNG) guiCha({ loai: "dong", tiep: !DUNG_SAU_CHANG, vua_xong: i + 1 });
         else if (i + 1 < B.chang.length) moChang(i + 1); else moCuoi();
       } });
-    tiep.disabled = i >= TT.qua && !window.PORTAL_SELF_STUDY;
+    tiep.disabled = i >= TT.qua && !window.PORTAL_FREE_NAV;
     var kt = el("button", { class: "nut phu", text: "Kiểm tra", onclick: function () {
       var lan = TT.lan_sai[i] || 0;
-      var dung = cau.filter(function (v) { return v.cham(lan >= 1 ? "giai" : "goi_y"); }).length;
+      var dung = cau.filter(function (v) { var ok=v.cham(lan >= 1 ? "giai" : "goi_y");if(v.tra_loi()!==null)hopes[cau.indexOf(v)].settle(ok);return ok; }).length;
       if (dung === cau.length) {
         tb.className = "thong-bao tot"; tb.textContent = "Tuyệt — con đã qua chặng " + (i + 1) + ".";
         if (!TT.passedStages.includes(i)) TT.passedStages.push(i);
@@ -806,7 +808,7 @@
   }
   function moCuoi() {
     if (!TT.ten) { moDau(); return; }
-    if (TT.qua < B.chang.length && !window.PORTAL_SELF_STUDY) { moChang(TT.qua); return; }
+    if (TT.qua < B.chang.length && !window.PORTAL_FREE_NAV) { moChang(TT.qua); return; }
     changDang = null;
     capNhatDau();
     main.innerHTML = "";
@@ -836,12 +838,12 @@
     var s = el("section", { class: "the" });
     s.appendChild(el("span", { class: "nhan", text: "Checkpoint cuối bài · " + TT.ten + " · " + TT.lop }));
     s.appendChild(el("h2", { text: "Làm bài" }));
-    var cau = rutDe().map(function (q, j) { var v = veCau(q, j + 1, false); s.appendChild(v.node); return v; });
+    var hopes=[];var cau = rutDe().map(function (q, j) { var v = veCau(q, j + 1, false);s.appendChild(v.node);hopes.push(HopeStars.mount(v.node,TT,'final',q.id,!!TT.dat,ghi));return v; });
     var tb = el("span", { class: "thong-bao xau" });
     var nop = el("button", { class: "nut", text: "Nộp bài", onclick: function () {
       var thieu = cau.map(function (v, j) { return v.tra_loi() === null ? j + 1 : 0; }).filter(Boolean);
       if (thieu.length) { tb.textContent = "Con chưa trả lời câu " + thieu.join(", ") + "."; return; }
-      var diem = cau.filter(function (v) { return v.cham("giai"); }).length;
+      var diem = cau.filter(function (v) { var ok=v.cham("giai");hopes[cau.indexOf(v)].settle(ok);return ok; }).length;
       nop.disabled = true; tb.textContent = "";
       TT.lich_su.push({ ngay: ngayNay(), diem: diem }); ghi();
       ketQua(diem);
@@ -929,7 +931,7 @@
   dungKhung();
   if (!TT.ten) moDau();
   else if (Q.get("cuoi")) moCuoi();
-  else if (Q.get("chang") !== null) moChang(Math.min(+Q.get("chang") || 0, window.PORTAL_SELF_STUDY ? B.chang.length - 1 : TT.qua));
+  else if (Q.get("chang") !== null) moChang(Math.min(+Q.get("chang") || 0, window.PORTAL_FREE_NAV ? B.chang.length - 1 : TT.qua));
   else if (TT.qua >= B.chang.length) moCuoi();
   else moChang(TT.qua);
 })();

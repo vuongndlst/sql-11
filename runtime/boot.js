@@ -6,8 +6,9 @@
  const base=href=>{const b=document.createElement('base');b.href=new URL(href,originBase);document.head.prepend(b)};
  const account=()=>({name:C.profile.display_name,className:C.profile.class_label,studentCode:C.profile.student_code,userId:C.user.id});
  try{
- const p=await C.init(),kind=p.payload.kind;if(kind!=='ml'&&kind!=='activity'&&new URLSearchParams(location.search).get('mode')==='quest'){await script('course-world.js');await CourseWorld(p,C,originBase);return}css('focus.css');if(innerWidth<700)document.body.classList.add('focus-hide-nav');document.title=p.lesson.title+' · LSTS Learning';
+ const p=await C.init(),kind=p.payload.kind;if(kind!=='ml'&&kind!=='activity'&&new URLSearchParams(location.search).get('mode')==='quest'){await script('course-world.js');await CourseWorld(p,C,originBase);return}css('focus.css');if(innerWidth<700)document.body.classList.add('focus-hide-nav');parent.postMessage({type:'portal-view',world:new URLSearchParams(location.search).get('mode')==='quest'&&kind!=='activity'},location.origin);document.title=p.lesson.title+' · LSTS Learning';
  document.addEventListener('click',e=>{const b=e.target.closest('[data-action="home"]');if(b){e.preventDefault();e.stopImmediatePropagation();parent.postMessage({type:'portal-back'},location.origin)}},true);
+ await script('hope-stars.js');
  if(kind==='sql'){
  base('sql/');css('sql/assets/style.css');window.Cloud=C;window.SQL_CONFIG={...PORTAL_CONFIG,courseId:p.course_id,runId:p.run_id};window.SQL_COURSE={lessons:[p.payload.lesson],seed:p.payload.seed};
  document.body.innerHTML='<header hidden><nav><button id="home">Bài học</button><button id="staff" hidden>Giáo viên</button><button id="account">Hồ sơ</button></nav></header><div class="statusbar" hidden><span id="sync"></span></div><main id="app"></main><dialog id="modal"><div id="modal-body"></div><button id="close-modal" class="close" aria-label="Đóng">×</button></dialog><div id="toast" role="status"></div>';

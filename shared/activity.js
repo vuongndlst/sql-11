@@ -7,17 +7,18 @@ window.ActivityLesson=(C,p)=>{
  const review=state.practiceReview||{};
  document.querySelectorAll('[name=criterion]').forEach(e=>e.checked=!!review.criteria?.includes(Number(e.value)));
  for(const q of spec.questions){const e=document.querySelector(`[name="q-${q.id}"][value="${review.answers?.[q.id]}"]`);if(e)e.checked=true;}
+ const hopes=spec.questions.map((q,i)=>HopeStars.mount(document.querySelectorAll('.activity-questions fieldset')[i],()=>C.peek(),'activity',q.id,!!C.peek().completed,st=>C.save(p.lesson.lesson_key,st)));
  const collect=()=>({criteria:[...document.querySelectorAll('[name=criterion]:checked')].map(e=>Number(e.value)),answers:Object.fromEntries(spec.questions.map(q=>[q.id,document.querySelector(`[name="q-${q.id}"]:checked`)?.value??null]))});
  const save=()=>C.save(p.lesson.lesson_key,{...C.peek(),evidence:evidence.value,started:true,practiceReview:collect()});
  evidence.addEventListener('input',save);document.querySelectorAll('#practice-assessment input').forEach(e=>e.addEventListener('change',save));
- document.getElementById('activity-save').onclick=()=>{document.getElementById('activity-status').textContent=save()?'Đã lưu nhật ký. Việc lưu chưa phải tự xác nhận hoàn thành.':'Chưa lưu được; tải bản sao ở Công cụ để giữ bài làm.';};
+ document.getElementById('activity-save').onclick=()=>{document.getElementById('activity-status').textContent=save()?'Đã lưu nhật ký. Việc lưu chưa phải tự xác nhận hoàn thành.':'Chưa lưu được; ở lại và thử lưu lại.';};
  document.getElementById('activity-export').onclick=()=>S.download(p.lesson.lesson_key+'-minh-chung.json',{format:'lsts-practice-evidence',lesson:p.lesson.lesson_key,student:{name:C.profile.display_name,class_label:C.profile.class_label},evidence:evidence.value,review:collect(),assessment:'self-reported',saved_at:new Date().toISOString()});
  document.getElementById('activity-complete').onclick=()=>{
   const r=collect();let correct=0;
-  for(const q of spec.questions){const ok=r.answers[q.id]!==null&&S.hash(q.id+'|'+r.answers[q.id])===q.answer_hash;if(ok)correct++;document.getElementById('feedback-'+q.id).textContent=(ok?'✓ Đúng. ':'Cần xem lại. ')+q.why;}
+  for(const q of spec.questions){const ok=r.answers[q.id]!==null&&S.hash(q.id+'|'+r.answers[q.id])===q.answer_hash;if(r.answers[q.id]!==null)hopes[spec.questions.indexOf(q)].settle(ok);if(ok)correct++;document.getElementById('feedback-'+q.id).textContent=(ok?'✓ Đúng. ':'Cần xem lại. ')+q.why;}
   const ready=r.criteria.length===spec.criteria.length&&evidence.value.trim().length>=40&&correct===spec.questions.length;
   if(!ready){save();document.getElementById('activity-status').textContent=`Con cần đủ checklist, nhật ký/minh chứng có nội dung và đúng ${spec.questions.length}/${spec.questions.length} câu tự kiểm tra (hiện ${correct}). Tiến độ cũ được giữ.`;return;}
   const ok=C.save(p.lesson.lesson_key,{...C.peek(),evidence:evidence.value,practiceReview:{...r,correct,confirmed_at:new Date().toISOString()},started:true,completed:true,completedAt:C.peek().completedAt||new Date().toISOString(),completionPolicy:'practice-v2',completionBasis:'self-reported-checklist-and-quiz',xp:Math.max(C.peek().xp||0,30)});
-  document.getElementById('activity-status').textContent=ok?'✓ Đã ghi nhận tự học theo checklist và kiểm tra. Tải minh chứng và nộp Canvas theo hướng dẫn giáo viên.':'Chưa lưu được; hãy tải bản sao ở Công cụ.';
+  document.getElementById('activity-status').textContent=ok?'✓ Đã ghi nhận tự học theo checklist và kiểm tra. Tải minh chứng và nộp Canvas theo hướng dẫn giáo viên.':'Chưa lưu được; ở lại và thử lưu lại.';
  };
 };
