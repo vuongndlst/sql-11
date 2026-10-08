@@ -17,3 +17,5 @@ pre{max-width:100%;white-space:pre-wrap;overflow-wrap:anywhere;overflow-x:auto}f
 @media(max-width:600px){.stats{gap:12px;flex-wrap:wrap}.heatmap th:first-child{min-width:135px}.sql-help{padding:12px}.er-table{font-size:12px}.form-grid{grid-template-columns:minmax(0,1fr)}}
 
 .definition{border-left:5px solid var(--teal);padding:16px 20px;margin:18px 0;background:#edf5ef;border-radius:8px}.definition p{margin-bottom:0}
+
+.learning-media{margin:24px 0;padding:20px;background:#eef5ec;border:1px solid #cbded1;border-radius:14px}.learning-media h3{margin-top:12px}.video-host{margin:14px 0}.video-host iframe{display:block;width:100%;aspect-ratio:16/9;border:0;border-radius:10px;background:#17363d}.learning-media a{overflow-wrap:anywhere}.study-mode{margin-top:16px;width:100%}@media(max-width:600px){.learning-media{padding:14px}}

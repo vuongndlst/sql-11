@@ -14,4 +14,6 @@ SQLite trên web và MySQL thực hành là hai môi trường khác nhau. Tải
 
 Runtime: sql.js 1.14.2 và supabase-js 2.117.3 được lưu cục bộ trong vendor, kèm giấy phép. Frontend chỉ có publishable key; phân quyền, tạo tài khoản và hỗ trợ mật khẩu thực hiện qua backend.
 
-Triển khai riêng khóa SQL trước; ba khóa ML, Python và C++ chưa được chuyển dữ liệu.
+Mỗi bài có chế độ Tự học / học bù để xem các chặng linh hoạt, checkpoint vẫn ghi riêng; video bổ trợ kèm câu hỏi và W3Schools/HeidiSQL tham khảo. Video không bắt buộc.
+
+Triển khai riêng khóa SQL trước; ba khóa ML, Python và C++ chưa được chuyển dữ liệu. Mô hình tạo lớp bằng mã và giao bài theo ngày hiện là kế hoạch nâng cấp.

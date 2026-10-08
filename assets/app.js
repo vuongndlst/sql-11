@@ -6,6 +6,7 @@ let auxiliary=null,activeView='home',pendingTool=null,historyRows=[];
 let current=null,stageIndex=0,pendingLesson=null,worker=null,requestId=0,requests=new Map(),working=false,quiz=null,authMode='login',noticeTimer,draftTimer,pendingDraft=null;
 const allowed=()=>Boolean(cloud.user&&cloud.ready&&cloud.contentLoaded);
 const state=()=>current&&allowed()?cloud.state(current.key):{};
+const selfStudy=()=>state().navigationMode==='self-study';
 const saved=key=>allowed()?cloud.state(key):{};
 function save(s,key=current?.key){if(!key||!allowed())return;if(!cloud.save(key,s))toast('Đợi tài khoản tải xong trước khi lưu.');updateNav()}
 function commitDraft(){clearTimeout(draftTimer);if(!pendingDraft)return;const d=pendingDraft;pendingDraft=null;const s=structuredClone(saved(d.key));s.draft=d.code;save(s,d.key)}
@@ -15,7 +16,7 @@ $('#close-modal').onclick=()=>modal.close();modal.addEventListener('click',e=>{i
 function updateNav(){
  $('#account').textContent=cloud.user?(cloud.profile?.display_name||'Tài khoản'):'Đăng nhập';$('#staff').hidden=!cloud.ready||cloud.role==='student';
  if(current&&allowed()){const s=state();$('.progressbar i')?.style.setProperty('width',((s.passed?.length||0)/4*100)+'%');
- document.querySelectorAll('.stage-list button').forEach((b,i)=>{if(i<4){b.disabled=i>0&&!s.passed?.includes(i-1);b.textContent=(s.passed?.includes(i)?'✓ ':'')+(i+1)+'. '+current.stages[i].title}})}
+ document.querySelectorAll('.stage-list button').forEach((b,i)=>{if(i<4){b.disabled=i>0&&!selfStudy()&&!s.passed?.includes(i-1);b.textContent=(s.passed?.includes(i)?'✓ ':'')+(i+1)+'. '+current.stages[i].title}})}
 }
 function closeAuxiliary(){auxiliary?.dispose?.();auxiliary=null}
 function home(){
@@ -38,22 +39,23 @@ async function lesson(key,index=0){
  if(cloud.user&&!cloud.ready){toast('Đang tải tài khoản, hãy đợi một chút.');return}
  const changed=current?.key!==key;current=l;quiz=null;stageIndex=index;location.hash=l.key;
  if(changed){stopWorker();await initWorker()}
- const s=state();if(index>0&&index<4&&!s.passed?.includes(index-1))stageIndex=0;
+ const s=state();if(index>0&&index<4&&!selfStudy()&&!s.passed?.includes(index-1))stageIndex=0;
  renderLesson();window.scrollTo({top:0,behavior:'instant'});
 }
 function renderLesson(){
  if(!allowed()){home();return}
  commitDraft();
  const l=current,s=state();
- app.innerHTML=`<div class="workspace"><aside class="sidebar"><button data-action="home">← Lộ trình khóa học</button><div class="meta">BUỔI ${l.n} · SGK BÀI ${l.sgk}<br>70 phút · ${l.n<7?'Khám phá':'Thực hành'}</div><div class="stage-list">${l.stages.map((x,i)=>`<button data-action="stage" data-index="${i}" class="${stageIndex===i?'active':''}" ${i>0&&!s.passed?.includes(i-1)?'disabled':''}>${s.passed?.includes(i)?'✓ ':''}${i+1}. ${esc(x.title)}</button>`).join('')}<button data-action="stage" data-index="4" class="${stageIndex===4?'active':''}">⌨ Phòng thực hành</button><button data-action="stage" data-index="5" class="${stageIndex===5?'active':''}">◎ Thử thách cuối</button></div><div class="progressbar"><i style="width:${(s.passed?.length||0)/4*100}%"></i></div><div class="tiny">${s.completed?'✓ Hoàn thành tự học':'Qua checkpoint để mở chặng tiếp theo'}</div><div class="actions"><button data-action="designer">▦ Xưởng thiết kế</button><button data-action="projects">◎ Dự án</button></div></aside><section><div class="lesson-head"><div class="eyebrow">${l.n<7?'Hiểu cơ sở dữ liệu':'Tạo lập và khai thác'}</div><h1>${esc(l.title)}</h1><p>${esc(l.question)}</p><div class="tiny">${esc(l.timing)}</div></div><div class="kud"><div><b>Biết (K)</b>${esc(l.kud.K)}</div><div><b>Hiểu (U)</b>${esc(l.kud.U)}</div><div><b>Làm được (D)</b>${esc(l.kud.D)}</div></div><div id="conflict"></div><div id="lesson-body"></div></section></div>`;
+ app.innerHTML=`<div class="workspace"><aside class="sidebar"><button data-action="home">← Lộ trình khóa học</button><div class="meta">BUỔI ${l.n} · SGK BÀI ${l.sgk}<br>70 phút · ${l.n<7?'Khám phá':'Thực hành'}</div><div class="stage-list">${l.stages.map((x,i)=>`<button data-action="stage" data-index="${i}" class="${stageIndex===i?'active':''}" ${i>0&&!selfStudy()&&!s.passed?.includes(i-1)?'disabled':''}>${s.passed?.includes(i)?'✓ ':''}${i+1}. ${esc(x.title)}</button>`).join('')}<button data-action="stage" data-index="4" class="${stageIndex===4?'active':''}">⌨ Phòng thực hành</button><button data-action="stage" data-index="5" class="${stageIndex===5?'active':''}">◎ Thử thách cuối</button></div><div class="progressbar"><i style="width:${(s.passed?.length||0)/4*100}%"></i></div><div class="tiny">${s.completed?'✓ Hoàn thành tự học':selfStudy()?'Tự học: xem mọi chặng; checkpoint vẫn ghi riêng.':'Qua checkpoint để mở chặng tiếp theo'}</div><button data-action="study-mode" class="study-mode">${selfStudy()?'↩ Học theo chặng':'☷ Tự học / học bù'}</button><p class="tiny">Học bù mở các chặng để con đọc lại theo nhu cầu. Hoàn thành vẫn cần checkpoint, nhiệm vụ SQL và thử thách cuối.</p><div class="actions"><button data-action="designer">▦ Xưởng thiết kế</button><button data-action="projects">◎ Dự án</button></div></aside><section><div class="lesson-head"><div class="eyebrow">${l.n<7?'Hiểu cơ sở dữ liệu':'Tạo lập và khai thác'}</div><h1>${esc(l.title)}</h1><p>${esc(l.question)}</p><div class="tiny">${esc(l.timing)}</div></div><div class="kud"><div><b>Biết (K)</b>${esc(l.kud.K)}</div><div><b>Hiểu (U)</b>${esc(l.kud.U)}</div><div><b>Làm được (D)</b>${esc(l.kud.D)}</div></div><div id="conflict"></div><div id="lesson-body"></div></section></div>`;
  if(stageIndex<4)renderStage();else if(stageIndex===4)renderLab();else renderFinal();
  showConflict();updateNav();
 }
 function renderStage(){
  const s=current.stages[stageIndex],p=state(),done=p.passed?.includes(stageIndex);
  const opts=shuffle(s.check.options.map((text,i)=>({text,i})));
- $('#lesson-body').innerHTML=`<article class="panel"><div class="eyebrow">Chặng ${stageIndex+1} / 4</div><h2>${esc(s.title)}</h2>${s.html}<form id="checkpoint" class="check"><b>Tự kiểm tra</b><p>${esc(s.check.q)}</p><div class="options">${opts.map(o=>`<label><input type="radio" name="answer" value="${o.i}" required>${esc(o.text)}</label>`).join('')}</div><button class="primary">Kiểm tra câu trả lời</button><div id="check-feedback" class="feedback" aria-live="polite">${done?'✓ Con đã qua chặng này.':''}</div></form><div class="actions" style="margin-top:20px"><button data-action="next" ${done?'':'disabled'}>${stageIndex<3?'Chặng tiếp theo':'Đến phòng thực hành'} →</button></div></article>`;
+ $('#lesson-body').innerHTML=`<article class="panel"><div class="eyebrow">Chặng ${stageIndex+1} / 4</div><h2>${esc(s.title)}</h2>${s.html}<form id="checkpoint" class="check"><b>Tự kiểm tra</b><p>${esc(s.check.q)}</p><div class="options">${opts.map(o=>`<label><input type="radio" name="answer" value="${o.i}" required>${esc(o.text)}</label>`).join('')}</div><button class="primary">Kiểm tra câu trả lời</button><div id="check-feedback" class="feedback" aria-live="polite">${done?'✓ Con đã qua chặng này.':''}</div></form><div class="actions" style="margin-top:20px"><button data-action="next" ${done||selfStudy()?'':'disabled'}>${stageIndex<3?'Chặng tiếp theo':'Đến phòng thực hành'} →</button></div></article>`;
  window.SQLVisuals.mount($('#lesson-body'),{run:async sql=>{if(!allowed())throw Error('Cần đăng nhập để thực hành.');return askWorker('run',{sql})}});
+ if(stageIndex===0){const media=document.createElement('div');media.dataset.learningMedia='';$('#checkpoint').before(media);SQLMedia.mount(media,current);}
  $('#checkpoint').onsubmit=e=>{
   e.preventDefault();const answer=Number(new FormData(e.target).get('answer')),ok=answer===s.check.answer,p=structuredClone(state());
   p.checkTries=p.checkTries||{};p.checkTries[stageIndex]=(p.checkTries[stageIndex]||0)+1;
@@ -159,7 +161,7 @@ function openTool(view){if(!allowed()){pendingTool=view;home();auth('register');
  auxiliary=SQLDesigner.mount($('#designer-root'),{graph:cloud.state('buoi-08').design,download,onChange:graph=>{const p=structuredClone(cloud.state('buoi-08'));p.design=graph;cloud.save('buoi-08',p)},onTest:(summary,sql)=>cloud.logPractice('buoi-08','design',sql,summary)});
 }
 async function studentDetail(userId,key){if(!allowed()||cloud.role==='student')return;try{const d=await cloud.studentDetail(userId,key);if(!allowed()||cloud.role==='student')return;const l=C.lessons.find(l=>l.key===key),p=d.progress[0]?.state||{};p.passed=Array.isArray(p.passed)?p.passed:[];
- openModal(`<div class="eyebrow">${esc(d.profile.student_code)} · ${esc(d.profile.class_label)}</div><h2>${esc(d.profile.display_name)}</h2><label class="field">Bài cần xem<select id="detail-lesson">${C.lessons.map(x=>`<option value="${x.key}" ${x.key===key?'selected':''}>${x.n}. ${esc(x.title)}</option>`).join('')}</select></label><p>${p.passed?.length||0}/4 chặng · Nhiệm vụ SQL: ${p.taskDone?'đã khớp':'chưa khớp'} · Điểm tự học cao nhất: ${Number(p.best)||0}/6</p><h3>Checkpoint từng chặng</h3><ul>${l.stages.map((s,i)=>`<li>${esc(s.title)}: ${p.passed?.includes(i)?'đã qua':'chưa qua'} · ${Number(p.checkTries?.[i])||0} lượt trả lời</li>`).join('')}</ul><h3>SQL đang lưu</h3><pre>${esc(p.draft||'Chưa có nháp SQL.')}</pre><h3>Nhật kí / minh chứng</h3><p class="preserve-lines">${esc(p.evidence||'Chưa ghi nhật kí.')}</p><h3>Lịch sử thực hành bài này</h3>${d.history.map(r=>`<details><summary>${esc(r.kind)} · ${new Date(r.created_at).toLocaleString('vi-VN')} · ${r.summary.ok===false?'có lỗi':'đã ghi nhận'}</summary><pre>${esc(r.code)}</pre>${r.summary.ok===false?SQLTools.errorHTML(r.summary):SQLTools.resultsHTML(r.summary)}</details>`).join('')||'<p>Chưa có lịch sử.</p>'}<p class="tiny">Tiến độ và lịch sử là dữ liệu quá trình tự học; điểm rubric dự án được giáo viên chấm riêng.</p>`);
+ openModal(`<div class="eyebrow">${esc(d.profile.student_code)} · ${esc(d.profile.class_label)}</div><h2>${esc(d.profile.display_name)}</h2><label class="field">Bài cần xem<select id="detail-lesson">${C.lessons.map(x=>`<option value="${x.key}" ${x.key===key?'selected':''}>${x.n}. ${esc(x.title)}</option>`).join('')}</select></label><p>${p.passed?.length||0}/4 chặng · Nhiệm vụ SQL: ${p.taskDone?'đã khớp':'chưa khớp'} · Điểm tự học cao nhất: ${Number(p.best)||0}/6</p><p>Cách học: ${p.navigationMode==='self-study'?'Tự học / học bù':'Theo chặng'}.</p><h3>Checkpoint từng chặng</h3><ul>${l.stages.map((s,i)=>`<li>${esc(s.title)}: ${p.passed?.includes(i)?'đã qua':'chưa qua'} · ${Number(p.checkTries?.[i])||0} lượt trả lời</li>`).join('')}</ul><h3>SQL đang lưu</h3><pre>${esc(p.draft||'Chưa có nháp SQL.')}</pre><h3>Nhật kí / minh chứng</h3><p class="preserve-lines">${esc(p.evidence||'Chưa ghi nhật kí.')}</p><h3>Lịch sử thực hành bài này</h3>${d.history.map(r=>`<details><summary>${esc(r.kind)} · ${new Date(r.created_at).toLocaleString('vi-VN')} · ${r.summary.ok===false?'có lỗi':'đã ghi nhận'}</summary><pre>${esc(r.code)}</pre>${r.summary.ok===false?SQLTools.errorHTML(r.summary):SQLTools.resultsHTML(r.summary)}</details>`).join('')||'<p>Chưa có lịch sử.</p>'}<p class="tiny">Tiến độ và lịch sử là dữ liệu quá trình tự học; điểm rubric dự án được giáo viên chấm riêng.</p>`);
  $('#detail-lesson').onchange=e=>studentDetail(userId,e.target.value);
  }catch(error){toast(authError(error))}}
 window.addEventListener('practice-change',()=>{if($('#history-sync'))$('#history-sync').textContent=cloud.practicePending()?'Có lịch sử đang chờ lưu lên tài khoản.':'Lịch sử đã lưu. Bấm Làm mới để xem bản mới nhất.'});
@@ -168,11 +170,12 @@ function showConflict(){if(!current||!$('#conflict'))return;const id=cloud.lesso
 document.addEventListener('click',async e=>{
  const b=e.target.closest('[data-action]');if(!b||b.disabled)return;
  const a=b.dataset.action;
- const learning=['stage','next','run','verify','stop','explore','reset','save-code','export','restore','new-quiz','up','down','keep-local','keep-cloud','draft-conflict','report','history-refresh','save-version','save-backup','inspect-schema','history-code','history-backup','history-download'];
+ const learning=['study-mode','stage','next','run','verify','stop','explore','reset','save-code','export','restore','new-quiz','up','down','keep-local','keep-cloud','draft-conflict','report','history-refresh','save-version','save-backup','inspect-schema','history-code','history-backup','history-download'];
  if(learning.includes(a)&&!allowed()){home();auth('register');return}
  try{
  if(a==='home')home();if(a==='lesson')await lesson(b.dataset.key);if(a==='auth')auth(cloud.user?'login':'register');
  if(a==='designer'||a==='projects')openTool(a);
+ if(a==='study-mode'){const p=structuredClone(state());p.navigationMode=selfStudy()?'guided':'self-study';save(p);renderLesson();toast(p.navigationMode==='self-study'?'Đã mở các chặng để tự học. Kết quả checkpoint giữ nguyên.':'Đã trở lại học theo chặng.');}
  if(a==='history-refresh')await renderHistory();
  if(a==='save-version'){if(!cloud.logPractice(current.key,'version',$('#sql').value,{ok:true,label:'Phiên bản lưu chủ động'}))toast('Chưa lưu được phiên bản.');await renderHistory()}
  if(a==='save-backup'){const r=await askWorker('export');if(cloud.logPractice(current.key,'backup','',{ok:true},r.sql)){toast('Bản sao đang được lưu vào tài khoản.');await renderHistory()}else toast('Bản sao quá lớn hoặc hàng đợi đầy. Hãy xuất file .sql để giữ.')}
