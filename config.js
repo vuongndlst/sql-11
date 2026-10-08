@@ -1,1 +1,0 @@
-window.SQL_CONFIG = {"url": "https://qxnjjbjqhiwshuupquro.supabase.co", "publishableKey": "sb_publishable_quQpMwBVwDB-o65BaXb2FQ_rFbaB6qk", "courseId": "sql-11", "runId": "29b043a4-6943-49d7-b562-f47e27407daa", "siteUrl": "https://vuongndlst.github.io/sql-11/", "emailRegistrationReady": true};
