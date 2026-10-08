@@ -5,7 +5,7 @@ window.CourseWorld=async(p,C,originBase)=>{
  let steps;
  if(kind==='sql')steps=[...p.payload.lesson.stages.map(x=>({title:x.title})),{title:'Phòng thực hành SQL'}];
  else {await script(kind+'/engine/kit.js');const source=document.createElement('script');source.textContent=p.payload.source;document.head.append(source);source.remove();steps=LESSON.steps.filter(x=>x.kind!=='gate'&&x.kind!=='boss');}
- const world={sql:{kieu:'network',mau:'#65DCC4',bieu_tuong:'SQL',ky_hieu:['SELECT','PK','FK','JOIN']},python:{kieu:'code',mau:'#8BC7FF',bieu_tuong:'Py',ky_hieu:['print()','if','for','list']},cpp:{kieu:'factory',mau:'#B69CFF',bieu_tuong:'C++',ky_hieu:['cout','cin','int','for']}}[kind];
+ const world={sql:{theme:'archive',ten_dao:'Thành phố dữ liệu',kieu:'network',mau:'#65DCC4',bieu_tuong:'SQL',ky_hieu:['SELECT','PK','FK','JOIN']},python:{theme:'space',ten_dao:'Trạm không gian Python',kieu:'code',mau:'#8BC7FF',bieu_tuong:'Py',ky_hieu:['print()','if','for','list']},cpp:{theme:'workshop',ten_dao:'Xưởng robot C++',kieu:'factory',mau:'#FFB56B',bieu_tuong:'C++',ky_hieu:['cout','cin','int','for']}}[kind];
  window.PORTAL_WORLD_STEPS=steps;
  window.BAI={ma:p.lesson.lesson_key,tien_to_luu:'lsts-world-',bai:p.lesson.position,khoa:p.course_id,nhan:world.bieu_tuong,tieu_de:p.lesson.title,cau_hoi:'Chọn bất kỳ trạm nào để học. Trên lớp, dừng và trao đổi theo hướng dẫn của giáo viên.',chang:steps.map(s=>({ten:s.title||s.name||s.label||s.id,phut:5,muc_tieu:[],khoi_dong:''})),cuoi:{so_cau:kind==='sql'?6:(LESSON.steps.find(s=>s.kind==='boss')?.challenges?.length||3),dat:kind==='sql'?5:3}};
  const key=BAI.tien_to_luu+BAI.ma,originalGet=Storage.prototype.getItem;
@@ -18,7 +18,7 @@ window.CourseWorld=async(p,C,originBase)=>{
  const m=document.createElement('script');m.type='module';m.src=asset('ml/assets/quest3d.js');document.head.append(m);
  addEventListener('storage',e=>{if(e.key!==key)dispatchEvent(new StorageEvent('storage',{key}))});
  const child=()=>document.querySelector('.q-khung iframe')?.contentWindow;
- addEventListener('message',e=>{if(e.origin!==location.origin)return;if(e.source===child()&&e.data?.type==='portal-status'){C.setNestedPending(e.data.pending);parent.postMessage(e.data,location.origin)}if(e.source===parent&&['portal-flush','portal-download'].includes(e.data?.type)&&child())child().postMessage(e.data,location.origin)});
+ addEventListener('message',e=>{if(e.origin!==location.origin)return;if(e.source===child()&&e.data?.type==='portal-status'){C.setNestedPending(e.data.pending);parent.postMessage(e.data,location.origin)}if(e.source===child()&&['lsts-location','lsts-exported'].includes(e.data?.type))parent.postMessage(e.data,location.origin);if(e.source===parent&&['portal-flush','portal-download'].includes(e.data?.type)&&child())child().postMessage(e.data,location.origin)});
  setTimeout(()=>{if(!document.querySelector('#quest canvas')){const u=new URL(location.href);u.searchParams.set('mode','read');location.replace(u.href)}},15000);
  parent.postMessage({type:'portal-lesson',kind},location.origin);
 };

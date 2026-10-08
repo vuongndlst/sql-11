@@ -10,12 +10,22 @@
  * Âm thanh tự tạo bằng Web Audio (không tải file nhạc). Máy yếu: tự chuyển chế độ nhẹ.
  */
 import * as THREE from "three";
+import {stationGame} from './quest-games.js';
 
 const B = window.BAI;
 const CFG = Object.assign({ ten: "Thế giới " + B.tieu_de, trang_doc: "index.html",
   mau: "#38BDF8", mau_phu: "#A78BFA", bieu_tuong: "AI", ky_hieu: ["AI", "ML", "∑", "∇"],
   dung_sau_chang: true }, window.QUEST || {});
 CFG.ten_dao = CFG.ten_dao || CFG.ten;
+// Course identity changes geometry as well as colour; lesson seeds vary its details.
+const THEME = CFG.theme || 'research';
+const STYLE = {
+  workshop: {sky:['#242039','#805B65','#D6A078'],ground:'#342E40',floor:'#54465A',segments:8,station:4,name:'Xưởng robot C++'},
+  space: {sky:['#060B23','#19235B','#495791'],ground:'#11192E',floor:'#273651',segments:48,station:24,name:'Trạm không gian Python'},
+  archive: {sky:['#092B36','#286C77','#85B8A5'],ground:'#16363C',floor:'#39676A',segments:4,station:4,name:'Thành phố dữ liệu'},
+  research: {sky:['#163838','#428B87','#A6CBB9'],ground:'#234A43',floor:'#47746B',segments:12,station:6,name:'Khu nghiên cứu ML'}
+}[THEME] || null;
+document.documentElement.dataset.worldTheme = THEME;
 const TIEN_TO = B.tien_to_luu || "ml1_";
 const LUU = TIEN_TO + B.ma;
 const LUU_Q = TIEN_TO + "quest";
@@ -75,7 +85,7 @@ renderer.domElement.setAttribute("tabindex", "0");
 renderer.domElement.setAttribute("aria-label", "Thế giới 3D " + CFG.ten_dao + ". Dùng phím mũi tên để đi, E để vào trạm.");
 
 const scene = new THREE.Scene();
-scene.fog = new THREE.Fog("#101A39", 65, 190);
+scene.fog = new THREE.Fog(STYLE.sky[1], 65, 190);
 const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 600);
 
 // ------------------------------------------------------------------ vật liệu, tiện ích
@@ -98,7 +108,7 @@ const FONT = '"Be Vietnam Pro", "Segoe UI", sans-serif';
 // ------------------------------------------------------------------ trời, ánh sáng, mây
 const troi = new THREE.Mesh(new THREE.SphereGeometry(400, 32, 16), new THREE.ShaderMaterial({
   side: THREE.BackSide, depthWrite: false, fog: false,
-  uniforms: { tren: { value: new THREE.Color("#0B1430") }, giua: { value: new THREE.Color("#264C84") }, duoi: { value: new THREE.Color("#5677A8") } },
+  uniforms: { tren: { value: new THREE.Color(STYLE.sky[0]) }, giua: { value: new THREE.Color(STYLE.sky[1]) }, duoi: { value: new THREE.Color(STYLE.sky[2]) } },
   vertexShader: "varying vec3 p; void main(){ p = position; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.); }",
   fragmentShader: "uniform vec3 tren; uniform vec3 giua; uniform vec3 duoi; varying vec3 p; void main(){ float y = normalize(p).y;" +
     " vec3 c = y > 0. ? mix(giua, tren, pow(y, .55)) : duoi; gl_FragColor = vec4(c, 1.); }",
@@ -126,22 +136,31 @@ for (let i = 0; i < 9; i++) {
   dam.userData.v = 0.4 + rnd() * 0.6;
   may.add(dam);
 }
-scene.add(may);
+if(THEME!=='space')scene.add(may);
+else {
+ const positions=new Float32Array(180*3);
+ for(let i=0;i<180;i++){const a=rnd()*Math.PI*2,r=90+rnd()*110;positions[i*3]=Math.cos(a)*r;positions[i*3+1]=25+rnd()*95;positions[i*3+2]=Math.sin(a)*r;}
+ const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.BufferAttribute(positions,3));
+ scene.add(new THREE.Points(geo,new THREE.PointsMaterial({color:'#DAE8FF',size:.55,sizeAttenuation:true})));
+}
 
 // ------------------------------------------------------------------ nền cảnh và đường đi giữa các trạm
 const CANH = CFG.kieu || "network";
 const DO_THI = new Set(["factory", "code", "tools", "statistics", "charts", "linear", "time", "deploy"]);
 const RUNG = new Set(["clean", "tree", "forest", "neighbors", "cluster", "reward"]);
-const mauNen = DO_THI.has(CANH) ? "#111D36" : RUNG.has(CANH) ? "#12312F" : "#15243E";
+const mauNen = STYLE.ground;
 const sanNgoai = new THREE.Mesh(new THREE.PlaneGeometry(420, 420), vl(mauNen, { metalness: 0.12, roughness: 0.9 }));
 sanNgoai.rotation.x = -Math.PI / 2; sanNgoai.position.y = -1.25; sanNgoai.receiveShadow = true; scene.add(sanNgoai);
 const luoiPho = new THREE.GridHelper(360, 72, "#37629B", "#203451");
 luoiPho.position.y = -1.23; scene.add(luoiPho);
 function thanhPho() {
   const g = new THREE.Group();
-  const san = new THREE.Mesh(new THREE.CylinderGeometry(R_DAO, R_DAO, 1.2, 72), vl(RUNG.has(CANH) ? "#294C45" : DO_THI.has(CANH) ? "#182B4C" : "#293451", { metalness: 0.25, roughness: 0.72 }));
+  // Square archive plaza, octagonal workshop, orbital deck, garden laboratory.
+  const radius=THEME==='archive'?R_DAO*Math.SQRT2:R_DAO;
+  const san = new THREE.Mesh(new THREE.CylinderGeometry(radius, radius, 1.2, STYLE.segments), vl(STYLE.floor, { metalness: 0.25, roughness: 0.72 }));
+  if(THEME==='archive')san.rotation.y=Math.PI/4;
   san.position.y = -0.6; san.receiveShadow = true; g.add(san);
-  const vien = new THREE.Mesh(new THREE.TorusGeometry(R_DAO - 0.3, 0.14, 8, 72),
+  const vien = new THREE.Mesh(new THREE.TorusGeometry(R_DAO - 0.3, 0.14, 8, STYLE.segments),
     new THREE.MeshBasicMaterial({ color: CFG.mau }));
   vien.rotation.x = Math.PI / 2; vien.position.y = 0.07; g.add(vien);
   const duong = new THREE.Mesh(new THREE.RingGeometry(12.6, 15.0, 72), vl("#2B3C59", { metalness: 0.45 }));
@@ -168,7 +187,7 @@ scene.add(thanhPho());
 
 // Cảnh nền: đô thị có nhà, các chủ đề còn lại có công trình theo hình thái riêng.
 const toaNha = new THREE.Group();
-for (let i = 0; i < (DO_THI.has(CANH) ? 68 : 0); i++) {
+for (let i = 0; i < (THEME==='workshop' ? (CAM_UNG?12:24) : 0); i++) {
   const a = (i / 76) * Math.PI * 2 + (rnd() - 0.5) * 0.05;
   const r = 34 + rnd() * 68, w = 3 + rnd() * 6, h = 10 + rnd() * 33;
   const x = Math.cos(a) * r, z = Math.sin(a) * r;
@@ -225,7 +244,49 @@ function canhChuDe() {
     for(let k=0;k<4;k++){const h=5+(k%2)*2;const tower=new THREE.Mesh(new THREE.BoxGeometry(3,h,3),vl("#31516A"));tower.position.set(-7+k*4.5,h/2,-34);g.add(tower);const cap=new THREE.Mesh(new THREE.BoxGeometry(3.3,.22,3.3),k%2?light:pale);cap.position.set(-7+k*4.5,h+.2,-34);g.add(cap);}
   }
 }
-canhChuDe();
+if(THEME==='research')canhChuDe();
+
+// Distinct landmarks outside the walking route; no extra mandatory tasks.
+const LANDMARKS = [];
+function addShape(group,geometry,material,x,y,z){const mesh=new THREE.Mesh(geometry,material);mesh.position.set(x,y,z);group.add(mesh);return mesh;}
+function courseLandmarks(){
+ const g=new THREE.Group();g.name='course-landmarks';scene.add(g);
+ const bright=vl(CFG.mau,{emissive:CFG.mau,emissiveIntensity:.18}),white=vl('#E2EDF0'),dark=vl(STYLE.ground);
+ for(let i=0;i<4;i++){
+  const p=viTri(45+i*90,33),part=new THREE.Group();part.position.copy(p);part.lookAt(0,0,0);g.add(part);
+  if(THEME==='space'){
+   // Rocket, launch ring and solar arrays.
+   addShape(part,new THREE.CylinderGeometry(1,1.3,6,12),white,0,3,0);
+   addShape(part,new THREE.ConeGeometry(1,2.2,12),bright,0,7.1,0);
+   for(const x of [-1.4,1.4])addShape(part,new THREE.BoxGeometry(.2,2,2.2),bright,x,1,0);
+   for(const x of [-4,4])addShape(part,new THREE.BoxGeometry(3,.15,4),vl('#405EAD',{metalness:.6}),x,2,0);
+   const ring=addShape(part,new THREE.TorusGeometry(4,.13,6,32),bright,0,.1,0);ring.rotation.x=Math.PI/2;
+   LANDMARKS.push('rocket-and-solar-array');
+  }else if(THEME==='archive'){
+   // Stacked database records, joined by explicit data links.
+   for(let row=0;row<3;row++){
+    addShape(part,new THREE.CylinderGeometry(2.1,2.1,1.7,20),row%2?white:bright,0,1+row*2.1,0);
+    for(let j=0;j<3;j++)addShape(part,new THREE.BoxGeometry(.3,.16,.1),dark,-.8+j*.8,1+row*2.1,2.1);
+   }
+   addShape(part,new THREE.BoxGeometry(9,.14,.25),bright,4.5,.1,0);LANDMARKS.push('database-stack-and-link');
+  }else if(THEME==='workshop'){
+   // Gear rim, work bench and articulated mechanical arm.
+   const gear=addShape(part,new THREE.TorusGeometry(3.2,.6,6,12),bright,0,4,0);
+   for(let j=0;j<12;j++){const a=j*Math.PI/6;const tooth=addShape(part,new THREE.BoxGeometry(.8,.8,1),bright,Math.cos(a)*3.65,4+Math.sin(a)*3.65,0);tooth.rotation.z=a;}
+   addShape(part,new THREE.BoxGeometry(5,.7,3),white,0,1.5,0);
+   addShape(part,new THREE.CylinderGeometry(.4,.5,3,8),dark,-2,3,1.5);
+   const arm=addShape(part,new THREE.BoxGeometry(2.7,.5,.6),bright,-.9,4.6,1.5);arm.rotation.z=-.3;
+   LANDMARKS.push('gear-and-robot-arm');
+  }else{
+   // Laboratory greenhouse and connected feature points.
+   addShape(part,new THREE.CylinderGeometry(3,3.3,.5,12),white,0,.25,0);
+   addShape(part,new THREE.SphereGeometry(3,16,8,0,Math.PI*2,0,Math.PI/2),vl('#8BDED5',{transparent:true,opacity:.48,depthWrite:false}),0,.5,0);
+   for(let j=0;j<3;j++)addShape(part,new THREE.IcosahedronGeometry(.5,0),bright,-1+j,1.2+j*.5,0);
+   LANDMARKS.push('research-dome');
+  }
+ }
+}
+courseLandmarks();
 
 // ------------------------------------------------------------------ vật cản (va chạm hình tròn)
 const VAT_CAN = [];
@@ -299,7 +360,7 @@ function robotNho(mau) {
 function taoTram(i) {
   const p = viTri(GOC_TRAM[i], 13.8);
   const g = new THREE.Group(); g.position.copy(p); g.lookAt(0, 0, 0);
-  const nen = bong(new THREE.Mesh(new THREE.CylinderGeometry(2.3, 2.6, 0.5, 6), vl("#CBD5E1")));
+  const nen = bong(new THREE.Mesh(new THREE.CylinderGeometry(2.3, 2.6, 0.5, STYLE.station), vl("#CBD5E1")));
   nen.position.y = 0.25; g.add(nen);
   const vong = new THREE.Mesh(new THREE.RingGeometry(1.7, 2.05, 6), new THREE.MeshBasicMaterial({ color: MAU_TT.khoa, transparent: true, opacity: 0.9 }));
   vong.rotation.x = -Math.PI / 2; vong.rotation.z = Math.PI / 6; vong.position.y = 0.52; g.add(vong);
@@ -311,7 +372,19 @@ function taoTram(i) {
   man.position.set(0, 2.6, -0.775); man.rotation.x = -0.12; g.add(man);
   const tinh_the = new THREE.Mesh(new THREE.OctahedronGeometry(0.5, 0), vl(MAU_TT.khoa, { emissive: MAU_TT.khoa, emissiveIntensity: 0.6, roughness: 0.3 }));
   tinh_the.position.set(0, 4.25, -0.9); tinh_the.castShadow = true; g.add(tinh_the);
-  const rb = robotNho("#00599C"); rb.position.set(1.55, 0.5, -0.1); rb.rotation.y = -0.5; g.add(rb);
+  const rb = new THREE.Group();
+  if(THEME==='workshop')rb.add(robotNho(CFG.mau));
+  else if(THEME==='space'){
+   addShape(rb,new THREE.CylinderGeometry(.4,.5,1.2,10),vl('#EBF1FC'),0,.6,0);
+   addShape(rb,new THREE.ConeGeometry(.4,.6,10),vl(CFG.mau),0,1.5,0);
+   for(const x of [-.5,.5])addShape(rb,new THREE.BoxGeometry(.5,.1,.7),vl('#436AC0'),x,.8,0);
+  }else if(THEME==='archive'){
+   for(let j=0;j<3;j++)addShape(rb,new THREE.CylinderGeometry(.55,.55,.4,12),vl(j%2?CFG.mau:'#F1F5F9'),0,.3+j*.5,0);
+  }else{
+   addShape(rb,new THREE.SphereGeometry(.65,12,8),vl(CFG.mau,{wireframe:true}),0,1,0);
+   addShape(rb,new THREE.CylinderGeometry(.15,.3,.6,8),vl('#F1F5F9'),0,.3,0);
+  }
+  rb.position.set(1.55, 0.5, -0.1); rb.rotation.y = -0.5; g.add(rb);
   const nhan = new THREE.Sprite(new THREE.SpriteMaterial({ map: nhanTram(i, "khoa"), depthTest: false, transparent: true }));
   nhan.scale.set(4.6, 1.37, 1); nhan.position.set(0, 6.0, -0.9); nhan.renderOrder = 10; g.add(nhan);
   const cham = new THREE.Mesh(new THREE.CylinderGeometry(2.6, 2.6, 6, 12), new THREE.MeshBasicMaterial({ visible: false }));
@@ -403,7 +476,7 @@ const TUONG = (() => {
 // ------------------------------------------------------------------ cột dữ liệu và mô-đun công nghệ trong quảng trường
 (() => {
   const vi = [];
-  for (let k = 0; k < 400 && vi.length < 40; k++) {
+  for (let k = 0; k < 400 && vi.length < (CAM_UNG?12:THEME==='research'?26:20); k++) {
     const a = rnd() * Math.PI * 2, r = 5.5 + rnd() * (R_DAO - 7.5);
     const x = Math.cos(a) * r, z = Math.sin(a) * r;
     if (Math.abs(r - 13.8) < 2.4) continue;
@@ -414,8 +487,8 @@ const TUONG = (() => {
     vi.push([x, z, 0.8 + rnd() * 0.7, rnd()]);
   }
   const cay = vi.filter(v => v[3] < 0.82), da = vi.filter(v => v[3] >= 0.82);
-  const thanGeo = DO_THI.has(CANH) ? new THREE.BoxGeometry(1.1,2.8,1.1) : new THREE.CylinderGeometry(RUNG.has(CANH)?.18:.12,RUNG.has(CANH)?.28:.2,2.8,6);
-  const dauGeo = DO_THI.has(CANH) ? new THREE.BoxGeometry(1.15,.1,1.15) : RUNG.has(CANH) ? new THREE.ConeGeometry(1.15,1.7,6) : new THREE.OctahedronGeometry(.65,0);
+  const thanGeo = THEME==='archive' ? new THREE.CylinderGeometry(.7,.7,2.8,12) : THEME==='space' ? new THREE.CylinderGeometry(.2,.4,2.8,8) : THEME==='workshop' ? new THREE.BoxGeometry(1.1,2.8,1.1) : new THREE.CylinderGeometry(.18,.28,2.8,6);
+  const dauGeo = THEME==='archive' ? new THREE.CylinderGeometry(.78,.78,.12,12) : THEME==='space' ? new THREE.BoxGeometry(2,.12,1.1) : THEME==='workshop' ? new THREE.TorusGeometry(.65,.18,6,12) : RUNG.has(CANH) ? new THREE.ConeGeometry(1.15,1.7,6) : new THREE.IcosahedronGeometry(.65,0);
   const than = new THREE.InstancedMesh(thanGeo, vl(RUNG.has(CANH)?"#526E5C":"#294668", { metalness: DO_THI.has(CANH)?.7:.3 }), cay.length);
   const la1 = new THREE.InstancedMesh(dauGeo, vl(CFG.mau, { emissive: CFG.mau, emissiveIntensity: 0.45 }), cay.length);
   const la2 = new THREE.InstancedMesh(dauGeo, vl(CFG.mau_phu, { emissive: CFG.mau_phu, emissiveIntensity: 0.45 }), cay.length);
@@ -680,7 +753,9 @@ const khungDong = h("button", { class: "q-nut", html: ICON.dong + '<span class="
 const iframe = h("iframe", { title: "Bài học" });
 khung.appendChild(h("div", { class: "q-khung-trong" }, [h("div", { class: "q-khung-dau" }, [khungTieuDe, khungDong]), iframe]));
 document.body.appendChild(khung);
-let khungMo = false, moLucQua = 0;
+let khungMo = false, miniOpen = false, moLucQua = 0;
+window.__questDesign = {theme:THEME,seed:B.bai,platform:STYLE.segments,station:STYLE.station,landmarks:LANDMARKS,
+  get paused(){return khungMo || miniOpen || document.hidden;},get renderCalls(){return renderer.info.render.calls;}};
 function moKhung(src, tieu_de) {
   khungMo = true; khungTieuDe.textContent = tieu_de;
   moLucQua = qua();
@@ -731,7 +806,7 @@ window.addEventListener("message", (e) => {
 });
 window.addEventListener("storage", (e) => { if (e.key === LUU) docLaiTienDo(true); });
 
-function vaoTram(t) {
+function vaoBaiTram(t) {
   if (t === CONG) {
     if (qua() < N && !window.PORTAL_SELF_STUDY) { SFX.khoa(); thongBao("Cổng còn khoá — qua đủ " + N + " trạm trước nhé.", "xau"); return; }
     moKhung(CFG.trang_doc + "?nhung=1&cuoi=1", "Checkpoint cuối — " + B.cuoi.so_cau + " câu, đạt " + B.cuoi.dat + " nhận chứng chỉ");
@@ -740,6 +815,16 @@ function vaoTram(t) {
   if (t.i > qua() && !window.PORTAL_SELF_STUDY) { SFX.khoa(); thongBao("Trạm " + (t.i + 1) + " còn khoá — qua Chặng " + (qua() + 1) + " trước nhé.", "xau"); return; }
   moKhung(CFG.trang_doc + "?nhung=1&dung_sau_chang=" + (CFG.dung_sau_chang ? "1" : "0") + "&chang=" + t.i,
     "Chặng " + (t.i + 1) + " · " + B.chang[t.i].ten);
+}
+function vaoTram(t){
+ if(miniOpen||khungMo)return;
+ const sessionKey='lsts-quick-game-skip:'+new URLSearchParams(location.search).get('profile');
+ if(t===CONG||sessionStorage.getItem(sessionKey)==='1'){vaoBaiTram(t);return;}
+ miniOpen=true;PHIM.clear();CAN.hoat=false;
+ const restore=()=>{miniOpen=false;renderer.domElement.focus();};
+ stationGame({theme:THEME,seed:B.bai*10+t.i,title:B.chang[t.i].ten,onEnter:()=>{restore();vaoBaiTram(t)},onCancel:restore});
+ const label=h('label',{class:'q-mini-note'},[h('input',{type:'checkbox',onchange:e=>{if(e.target.checked)sessionStorage.setItem(sessionKey,'1');else sessionStorage.removeItem(sessionKey)}}),' Vào bài trực tiếp trong phiên này']);
+ document.querySelector('.q-mini-card').append(label);
 }
 
 // ------------------------------------------------------------------ điều khiển
@@ -752,6 +837,7 @@ const camXaMacDinh = () => innerWidth / innerHeight < 0.8 ? 17 : 13;   // màn h
 let camYaw = 0, camXa = camXaMacDinh(), dich = null;
 
 addEventListener("keydown", (e) => {
+  if (miniOpen) return;
   if (khungMo) { if (e.key === "Escape") dongKhung(); return; }
   if (manDau && !manDau.classList.contains("an")) return;
   const k = e.key.toLowerCase();
@@ -882,7 +968,7 @@ function vaCham(p) {
 function khung_hinh() {
   requestAnimationFrame(khung_hinh);
   const dt = Math.min(dong_ho.getDelta(), 0.05), t = dong_ho.elapsedTime;
-  if (document.hidden || khungMo) return;
+  if (document.hidden || khungMo || miniOpen) return;
   // tự hạ chất lượng nếu máy chậm (đo 120 khung hình đầu)
   if (QS.chat_luong === "tu_dong" && CHAT.dem < 120 && dangChoi) {
     CHAT.dem++; CHAT.tong += dt;
@@ -974,7 +1060,7 @@ manDau.appendChild(h("div", { class: "q-the" }, [
   h("div", { class: "q-nho", text: B.khoa + " · " + B.nhan }),
   h("h1", { text: CFG.ten_dao }),
   h("p", { class: "q-cau", text: B.cau_hoi }),
-  h("p", { text: "Chọn bất kỳ trạm nào để khám phá. Khi học trên lớp, dừng và trao đổi theo lời nhắc của giáo viên." }),
+  h("p", { text: ({workshop:'Khám phá xưởng robot, bánh răng và bàn lắp ráp.',space:'Khám phá bệ phóng, tên lửa và dàn pin của trạm không gian.',archive:'Khám phá các kho dữ liệu và đường kết nối giữa chúng.',research:'Khám phá nhà kính nghiên cứu và các cụm dữ liệu theo chủ đề bài học.'})[THEME] + ' Chọn bất kỳ trạm nào để học; khi vào trạm, thế giới sẽ tạm dừng.' }),
   h("p", { class: "q-nho", text: CAM_UNG ? "Kéo để di chuyển hoặc chạm trạm để đi tới." : "Di chuyển: WASD/phím mũi tên · Vào trạm: E · Xoay nhìn: kéo chuột." }),
   h("div", { class: "q-hang" }, [nutVao, h("a", { class: "q-lien-ket", href: CFG.trang_doc, text: "Học ở chế độ đọc" })]),
 ]));

@@ -764,7 +764,7 @@
     ck.appendChild(el("span", { class: "nhan", text: "Checkpoint chặng " + (i + 1) }));
     ck.appendChild(el("h2", { text: "Kiểm tra nhanh" }));
     ck.appendChild(el("p", { text: TT.passedStages.includes(i) ? "Con đã qua chặng này. Có thể làm lại để ôn." :
-      "Trả lời đúng tất cả để mở chặng sau. Sai lần đầu: đọc gợi ý. Sai từ lần hai: xem lời giải chi tiết." }));
+      "Trả lời đúng tất cả để ghi nhận hoàn thành chặng. Sai lần đầu: đọc gợi ý. Sai từ lần hai: xem lời giải chi tiết." }));
     var cau = c.checkpoint.map(function (q, j) { var v = veCau(q, j + 1, true); ck.appendChild(v.node); return v; });
     var tb = el("span", { class: "thong-bao" });
     var tiep = el("button", { class: "nut", text: NHUNG ? (DUNG_SAU_CHANG ? "Về thế giới 3D — dừng trao đổi" : "Về thế giới 3D — sang trạm tiếp →") :
@@ -928,8 +928,10 @@
   // ------------------------------------------------------------ chạy
   dungKhung();
   if (!TT.ten) moDau();
-  else if (NHUNG && Q.get("cuoi")) moCuoi();
-  else if (NHUNG && Q.get("chang") !== null) moChang(Math.min(+Q.get("chang") || 0, window.PORTAL_SELF_STUDY ? B.chang.length - 1 : TT.qua));
+  else if (Q.get("cuoi")) moCuoi();
+  else if (Q.get("chang") !== null) moChang(Math.min(+Q.get("chang") || 0, window.PORTAL_SELF_STUDY ? B.chang.length - 1 : TT.qua));
   else if (TT.qua >= B.chang.length) moCuoi();
   else moChang(TT.qua);
 })();
+
+
