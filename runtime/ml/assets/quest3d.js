@@ -689,7 +689,7 @@ function moKhung(src, tieu_de) {
   PHIM.clear(); CAN.hoat = false;
   setTimeout(() => khungDong.focus(), 50);
 }
-function dongKhung() {
+function dongKhung() {const child=iframe.contentWindow?.PortalCloud;if(child?.confirmLeave&&!child.confirmLeave())return;if(child?.localError)parent.postMessage({type:'portal-status',status:'Phần chưa lưu cần phục hồi từ bản sao JSON.',pending:false},location.origin);
   if (!khungMo) return;
   khungMo = false; khung.classList.remove("hien");
   iframe.src = "about:blank";
