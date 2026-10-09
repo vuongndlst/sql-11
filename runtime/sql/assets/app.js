@@ -11,6 +11,8 @@ const stageOpen=i=>{const s=state();return !!s.completed||i<=4&&Array.from({leng
 const saved=key=>allowed()?cloud.state(key):{};
 function save(s,key=current?.key){if(!key||!allowed())return;s.completed=Boolean(s.completed||s.best>=5&&[0,1,2,3].every(i=>s.passed?.includes(i))&&s.taskDone);if(!cloud.save(key,s))toast('Chưa lưu được; ở lại và thử lưu lại.');updateNav()}
 function commitDraft(){clearTimeout(draftTimer);if(!pendingDraft)return;const d=pendingDraft;pendingDraft=null;const s=structuredClone(saved(d.key));s.draft=d.code;save(s,d.key)}
+// Finishing a session must not discard the editor's pending debounce.
+const flushProgress=cloud.flush;cloud.flush=async()=>{commitDraft();return flushProgress();};
 function toast(t){$('#toast').textContent=t;$('#toast').style.display='block';clearTimeout(noticeTimer);noticeTimer=setTimeout(()=>$('#toast').style.display='none',4500)}
 function openModal(html){$('#modal-body').innerHTML=html;if(!modal.open)modal.showModal()}
 $('#close-modal').onclick=()=>modal.close();modal.addEventListener('click',e=>{if(e.target===modal)modal.close()});

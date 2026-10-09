@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-import {selectGame,setupPuzzle} from './mini-puzzles.js?v=93713fcc72aa';
-import {makeMaze,moveMaze,mazeRoute,advanceFlight,advanceJump} from './game-rules.js?v=93713fcc72aa';
+import {selectGame,setupPuzzle} from './mini-puzzles.js?v=42bc8eeadc24';
+import {makeMaze,moveMaze,mazeRoute,advanceFlight,advanceJump} from './game-rules.js?v=42bc8eeadc24';
 
 // This short transition never grants academic XP or completes a lesson stage.
 export function stationGame({theme,seed=1,title='',sound=true,onEnter,onCancel,onStart=()=>true}) {

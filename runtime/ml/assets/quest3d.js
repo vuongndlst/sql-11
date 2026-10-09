@@ -10,7 +10,7 @@
  * Âm thanh tự tạo bằng Web Audio (không tải file nhạc). Máy yếu: tự chuyển chế độ nhẹ.
  */
 import * as THREE from "three";
-import {stationGame} from './quest-games.js?v=93713fcc72aa';
+import {stationGame} from './quest-games.js?v=42bc8eeadc24';
 
 const B = window.BAI;
 const CFG = Object.assign({ ten: "Thế giới " + B.tieu_de, trang_doc: "index.html",
