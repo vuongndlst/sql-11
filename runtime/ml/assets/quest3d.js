@@ -10,7 +10,8 @@
  * Âm thanh tự tạo bằng Web Audio (không tải file nhạc). Máy yếu: tự chuyển chế độ nhẹ.
  */
 import * as THREE from "three";
-import {stationGame} from './quest-games.js?v=42bc8eeadc24';
+import {stationGame} from './quest-games.js?v=1da0cf0101b9';
+import {assignStation,startStation,finishStation} from './arcade-selection.js?v=1da0cf0101b9';
 
 const B = window.BAI;
 const CFG = Object.assign({ ten: "Thế giới " + B.tieu_de, trang_doc: "index.html",
@@ -821,14 +822,16 @@ function vaoBaiTram(t) {
   moKhung(CFG.trang_doc + "?nhung=1&dung_sau_chang=" + (CFG.dung_sau_chang ? "1" : "0") + "&chang=" + t.i,
     "Chặng " + (t.i + 1) + " · " + B.chang[t.i].ten);
 }
-function vaoTram(t){
+async function vaoTram(t){
  if(miniOpen||khungMo)return;
  if(t===CONG||t.i>qua()&&!window.PORTAL_FREE_NAV){vaoBaiTram(t);return;}
  const progress=window.PortalCloud?.peek?.()||{};
  if(passed(t.i)||progress.stationGames?.[t.i]){vaoBaiTram(t);return;}
  miniOpen=true;PHIM.clear();CAN.hoat=false;moMenu(false);if(AM.tong)AM.tong.gain.value=0;
  const restore=()=>{miniOpen=false;if(AM.tong)AM.tong.gain.value=QS.am?.8:0;renderer.domElement.focus();};
- stationGame({theme:THEME,seed:B.bai*10+t.i,title:B.chang[t.i].ten,sound:QS.am,onStart:()=>{const C=window.PortalCloud;if(!C)return false;const s=C.peek();s.stationGames={...s.stationGames,[t.i]:true};return C.save(C.packet.lesson.lesson_key,s);},onEnter:()=>{
+ const C=window.PortalCloud;let assignment;try{assignment=await assignStation(C,t.i);}catch{restore();vaoBaiTram(t);return;}if(!assignment||assignment.status!=='assigned'){restore();vaoBaiTram(t);return;}
+ const sound=window.LocalLearning?.read('arcade-sound:'+C.profile.id,QS.am);
+ stationGame({theme:THEME,seed:assignment.seed,gameType:assignment.type,seconds:assignment.seconds,title:B.chang[t.i].ten,sound,onStart:()=>startStation(C,t.i),onFinish:reason=>finishStation(C,t.i,reason),onEnter:()=>{
    const C=window.PortalCloud;if(C){const state=C.peek();state.stationGames={...state.stationGames,[t.i]:true};C.save(C.packet.lesson.lesson_key,state);}
    restore();vaoBaiTram(t);
  },onCancel:restore});

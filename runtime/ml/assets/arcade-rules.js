@@ -1,0 +1,40 @@
+// Pure rules: seeded layouts can be reproduced without a renderer or a learner record.
+export const CATALOG = {
+ jump:{name:'Chạy vượt rào',group:'reflex',seconds:90,goal:'Vượt 10 hàng rào.',hint:'Nhấn Space hoặc chạm để nhảy trước hàng rào.'},
+ flight:{name:'Phi công bầu trời',group:'reflex',seconds:90,goal:'Bay qua 8 cổng.',hint:'Nhấn Space hoặc chạm để nâng máy bay; thả để hạ.'},
+ maze:{name:'Mê cung khám phá',group:'thinking',seconds:120,goal:'Tìm đường đến cổng sáng.',hint:'Dùng các phím mũi tên hoặc nút hướng để di chuyển.'},
+ memory:{name:'Lật thẻ tìm cặp',group:'thinking',seconds:90,goal:'Tìm đủ 6 cặp hình.',hint:'Chạm hai thẻ để tìm hình giống nhau.'},
+ slide:{name:'Trượt ô số',group:'thinking',seconds:90,goal:'Xếp 1–8, ô trống ở cuối.',hint:'Chạm ô cạnh ô trống để trượt; Gợi ý chỉ một bước.'},
+ bowling:{name:'Bowling',group:'control',seconds:90,goal:'Làm đổ ít nhất 7/10 chai trong 2 lần lăn.',hint:'Ngắm bằng ← →; nhấn Lăn khi lực ở vùng sáng.'},
+ tetris:{name:'Xếp khối',group:'control',seconds:90,goal:'Xóa 4 hàng.',hint:'← → di chuyển · ↑ xoay · Space thả nhanh.'},
+ breakout:{name:'Phá gạch',group:'control',seconds:90,goal:'Phá 18 viên gạch.',hint:'Di chuột/chạm hoặc giữ ← → để đỡ bóng.'},
+ snake:{name:'Rắn săn mồi',group:'control',seconds:90,goal:'Thu thập 7 quả, tránh tường và thân.',hint:'Dùng các phím mũi tên hoặc nút hướng để đổi hướng.'},
+ frogger:{name:'Băng qua phố',group:'reflex',seconds:90,goal:'Qua 7 làn xe đến bờ bên kia.',hint:'Dùng mũi tên; dừng ở dải an toàn rồi quan sát xe.'},
+ pong:{name:'Pong',group:'control',seconds:90,goal:'Ghi 3 điểm trước máy.',hint:'Di chuột/chạm hoặc giữ ↑ ↓ để đỡ bóng.'},
+ sokoban:{name:'Đẩy thùng',group:'thinking',seconds:120,goal:'Đẩy hai thùng vào hai đích.',hint:'Dùng mũi tên để đẩy; Hoàn tác khi cần.'}
+};
+export const GAME_TYPES=Object.keys(CATALOG);
+export function rng(seed){let s=seed>>>0;return ()=>{s=(Math.imul(s,1664525)+1013904223)>>>0;return s/4294967296;};}
+export function shuffle(items,random){const a=[...items];for(let i=a.length-1;i>0;i--){const j=Math.floor(random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+export function shuffleBag(seed,history=[]){const random=rng(seed),a=shuffle(GAME_TYPES,random),recent=history.slice(-2);for(let i=0;i<a.length;i++){let choices=a.slice(i).filter(t=>!recent.includes(t));if(!choices.length)choices=a.slice(i).filter(t=>t!==recent.at(-1));if(!choices.length)choices=a.slice(i);const prevGroup=CATALOG[recent.at(-1)]?.group,other=choices.filter(t=>CATALOG[t].group!==prevGroup);if(other.length)choices=other;const pick=choices[Math.floor(random()*choices.length)],j=a.indexOf(pick,i);[a[i],a[j]]=[a[j],a[i]];recent.push(pick);recent.splice(0,Math.max(0,recent.length-2));}return a;}
+export const DIRECTIONS=[[0,-1],[1,0],[0,1],[-1,0]];
+export function slideBoard(seed,steps=20){const random=rng(seed),b=[1,2,3,4,5,6,7,8,0];let z=8,last=-1;for(let k=0;k<steps;k++){const options=b.map((_,i)=>i).filter(i=>i!==last&&Math.abs(i%3-z%3)+Math.abs(Math.floor(i/3)-Math.floor(z/3))===1),n=options[Math.floor(random()*options.length)];[b[n],b[z]]=[b[z],b[n]];last=z;z=n;}if(b.every((n,i)=>n===(i+1)%9))return slideBoard(seed+1,steps+1);return b;}
+export function slideMove(b,n){const p=b.indexOf(n),z=b.indexOf(0);if(n===0||Math.abs(p%3-z%3)+Math.abs(Math.floor(p/3)-Math.floor(z/3))!==1)return false;[b[p],b[z]]=[b[z],b[p]];return true;}
+export function solveSlide(b){const start=b.join(''),target='123456780',q=[start],prev=new Map([[start,null]]);for(let at=0;at<q.length;at++){const s=q[at];if(s===target)break;const a=[...s].map(Number),z=a.indexOf(0);for(let i=0;i<9;i++)if(Math.abs(i%3-z%3)+Math.abs(Math.floor(i/3)-Math.floor(z/3))===1){const next=[...a];[next[i],next[z]]=[next[z],next[i]];const key=next.join('');if(!prev.has(key)){prev.set(key,[s,a[i]]);q.push(key);}}}if(!prev.has(target))return [];const path=[];let key=target;while(prev.get(key)){const[s,n]=prev.get(key);path.unshift(n);key=s;}return path;}
+export function sokobanBoard(seed){const rows=['#######','#.....#','#.$...#','#...$.#','#.....#','#..xx.#','#######'];let a=rows.map(x=>[...x]);if(seed%2)a=a.map(x=>x.reverse());for(let n=0;n<(seed>>>1)%4;n++)a=a[0].map((_,x)=>a.map(row=>row[x]).reverse());const walls=[],boxes=[],goals=[];for(let y=0;y<7;y++)for(let x=0;x<7;x++){const n=y*7+x,c=a[y][x];if(c==='#')walls.push(n);if(c==='$')boxes.push(n);if(c==='x')goals.push(n);}let p=8;while(walls.includes(p)||boxes.includes(p))p++;return {width:7,walls,boxes,goals,p,moves:0};}
+export function pushBox(s,d){const [dx,dy]=DIRECTIONS[d],delta=dy*s.width+dx,n=s.p+delta;if(s.walls.includes(n))return false;const i=s.boxes.indexOf(n);if(i>=0){const dest=n+delta;if(s.walls.includes(dest)||s.boxes.includes(dest))return false;s.boxes[i]=dest;}s.p=n;s.moves++;return true;}
+export function solveSokoban(s){const encode=(p,b)=>p+':'+[...b].sort((a,b)=>a-b).join(','),key=encode(s.p,s.boxes),q=[{p:s.p,boxes:[...s.boxes],key}],prev=new Map([[key,null]]);let goal=null;for(let i=0;i<q.length;i++){const node=q[i];if(node.boxes.every(n=>s.goals.includes(n))){goal=node.key;break;}for(let d=0;d<4;d++){const state={...s,p:node.p,boxes:[...node.boxes]};if(!pushBox(state,d))continue;const k=encode(state.p,state.boxes);if(!prev.has(k)){prev.set(k,[node.key,d]);q.push({...state,key:k});}}}if(!goal)return [];const path=[];while(prev.get(goal)){const[k,d]=prev.get(goal);path.unshift(d);goal=k;}return path;}
+const SHAPES=[[[1,1,1,1]],[[1,1],[1,1]],[[0,1,0],[1,1,1]],[[1,0,0],[1,1,1]],[[0,0,1],[1,1,1]],[[0,1,1],[1,1,0]],[[1,1,0],[0,1,1]]];
+export function rotatePiece(shape){return shape[0].map((_,x)=>shape.map(r=>r[x]).reverse());}
+export function tetrisState(seed){const random=rng(seed),grid=Array.from({length:14},()=>Array(8).fill(0)),hole=1+Math.floor(random()*5);for(let y=12;y<14;y++)for(let x=0;x<8;x++)if(x!==hole&&x!==hole+1)grid[y][x]=1+(x%6);return {grid,hole,bag:[1,...shuffle([0,2,3,4,5,6],random)],random,piece:null,next:null,lines:0,drop:0};}
+function takePiece(s){if(!s.bag.length)s.bag=shuffle([0,1,2,3,4,5,6],s.random);const id=s.bag.shift();return {id,shape:SHAPES[id].map(r=>[...r]),x:3,y:0};}
+export function tetrisSpawn(s){s.piece=s.next||takePiece(s);s.next=takePiece(s);s.drop=0;return fits(s,s.piece);}
+export function fits(s,p){return p.shape.every((r,y)=>r.every((v,x)=>!v||(p.x+x>=0&&p.x+x<8&&p.y+y>=0&&p.y+y<14&&!s.grid[p.y+y][p.x+x])));}
+export function tetrisMove(s,dx,dy){const p={...s.piece,x:s.piece.x+dx,y:s.piece.y+dy};if(!fits(s,p))return false;s.piece=p;return true;}
+export function tetrisRotate(s){const shape=rotatePiece(s.piece.shape);for(const dx of [0,-1,1,-2,2]){const p={...s.piece,shape,x:s.piece.x+dx};if(fits(s,p)){s.piece=p;return true;}}return false;}
+export function tetrisLock(s){s.piece.shape.forEach((r,y)=>r.forEach((v,x)=>{if(v)s.grid[s.piece.y+y][s.piece.x+x]=s.piece.id+1;}));const remaining=s.grid.filter(r=>!r.every(Boolean)),count=14-remaining.length;while(remaining.length<14)remaining.unshift(Array(8).fill(0));s.grid=remaining;s.lines+=count;return tetrisSpawn(s);}
+export function tetrisDrop(s){while(tetrisMove(s,0,1)){}return tetrisLock(s);}
+export function snakeState(seed){return {body:[{x:5,y:6},{x:4,y:6},{x:3,y:6}],direction:1,queued:1,food:null,random:rng(seed),eaten:0,tick:0,width:12};}
+export function snakeFood(s){const free=[];for(let y=0;y<s.width;y++)for(let x=0;x<s.width;x++)if(!s.body.some(p=>p.x===x&&p.y===y))free.push({x,y});s.food=free[Math.floor(s.random()*free.length)]||null;return s.food;}
+export function snakeTurn(s,d){if((d+2)%4===s.direction)return false;s.queued=d;return true;}
+export function snakeStep(s){s.direction=s.queued;const [dx,dy]=DIRECTIONS[s.direction],head={x:s.body[0].x+dx,y:s.body[0].y+dy},eat=head.x===s.food?.x&&head.y===s.food?.y,body=eat?s.body:s.body.slice(0,-1);if(head.x<0||head.y<0||head.x>=s.width||head.y>=s.width||body.some(p=>p.x===head.x&&p.y===head.y))return 'lose';s.body.unshift(head);if(eat){s.eaten++;snakeFood(s);}else s.body.pop();return s.eaten>=7?'win':null;}
