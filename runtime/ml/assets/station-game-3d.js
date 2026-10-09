@@ -1,9 +1,9 @@
 import * as THREE from 'three';
-import {selectGame,setupPuzzle} from './mini-puzzles.js?v=6b348f273601';
-import {makeMaze,moveMaze,mazeRoute,advanceFlight,advanceJump} from './game-rules.js?v=6b348f273601';
+import {selectGame,setupPuzzle} from './mini-puzzles.js?v=93713fcc72aa';
+import {makeMaze,moveMaze,mazeRoute,advanceFlight,advanceJump} from './game-rules.js?v=93713fcc72aa';
 
 // This short transition never grants academic XP or completes a lesson stage.
-export function stationGame({theme,seed=1,title='',sound=true,onEnter,onCancel}) {
+export function stationGame({theme,seed=1,title='',sound=true,onEnter,onCancel,onStart=()=>true}) {
  const type=selectGame(theme,seed),maze=type==='maze',flight=type==='flight',puzzle=['memory','slide','bowling'].includes(type),orthographic=maze||puzzle;
  const name={maze:'Tìm đường đến ngôi sao',flight:'Bay qua khoảng trống',jump:'Nhảy qua chướng ngại vật',memory:'Lật thẻ tìm cặp',slide:'Ghép hình số',bowling:'Bowling'}[type];
  const previousFocus=document.activeElement,layer=document.createElement('section');
@@ -33,7 +33,7 @@ export function stationGame({theme,seed=1,title='',sound=true,onEnter,onCancel})
  function control(label,action,aria){const b=document.createElement('button');b.type='button';b.textContent=label;if(aria)b.setAttribute('aria-label',aria);b.onclick=action;controls.append(b);return b;}
  function mazeMove(d){if(!maze||!active||won)return;if(moveMaze(state,d)){tone('move');if(state.p===state.cells.length-1)celebrate();}}
  function action(){if(maze||puzzle||!active||won)return;if(flight)state.vy=4.4;else if(state.y<=.02)state.vy=6;tone('jump');}
- function key(e){if(closed)return;if(e.key==='Tab'){const buttons=[...layer.querySelectorAll('button:not(:disabled)')].filter(b=>b.offsetParent!==null),i=buttons.indexOf(document.activeElement);if(buttons.length){e.preventDefault();buttons[(i+(e.shiftKey?-1:1)+buttons.length)%buttons.length].focus();}return;}if(won)return;if(puzzle&&active&&e.key!=='Escape'){puzzleGame?.key(e);return;}if(e.key==='Escape'){e.preventDefault();finish(onCancel);return;}const d=['ArrowUp','ArrowRight','ArrowDown','ArrowLeft'].indexOf(e.key);if(d>=0){e.preventDefault();mazeMove(d);}if(e.code==='Space'){e.preventDefault();if(!active&&!firstStart)begin();else action();}}
+ function key(e){if(closed)return;if(e.key==='Tab'){const buttons=[...layer.querySelectorAll('button:not(:disabled)')].filter(b=>b.offsetParent!==null),i=buttons.indexOf(document.activeElement);if(buttons.length){e.preventDefault();buttons[(i+(e.shiftKey?-1:1)+buttons.length)%buttons.length].focus();}return;}if(won)return;const target=e.target?.closest?.('button');if(target&&(e.code==='Space'||e.key==='Enter')){e.preventDefault();if(!target.disabled)target.click();return;}if(puzzle&&active&&e.key!=='Escape'){puzzleGame?.key(e);return;}if(e.key==='Escape'){e.preventDefault();finish(onCancel);return;}const d=['ArrowUp','ArrowRight','ArrowDown','ArrowLeft'].indexOf(e.key);if(d>=0){e.preventDefault();mazeMove(d);}if(e.code==='Space'){e.preventDefault();if(!active&&!firstStart)begin();else action();}}
  layer.querySelector('.game-enter').onclick=enter;layer.querySelector('.game-back').onclick=()=>finish(onCancel);
  document.addEventListener('keydown',key);window.addEventListener('resize',resize);
  function buildMaze(){state=makeMaze(seed);const tile=1.35,wall=mat(theme==='archive'?0x16746e:0x357cb0,.12),lightTile=mat(0xf5eee0),darkTile=mat(0xd5e7d7);const xy=p=>[(p%state.cols-(state.cols-1)/2)*tile,(Math.floor(p/state.cols)-(state.rows-1)/2)*tile];
@@ -47,7 +47,7 @@ export function stationGame({theme,seed=1,title='',sound=true,onEnter,onCancel})
   host.addEventListener('pointerdown',e=>{if(e.target===renderer?.domElement)action();});
  }
  function resetAction(){for(const o of moving.values())scene.remove(o);moving.clear();state={y:flight?3:0,vy:0,spawn:flight?.8:1,gates:[],passed:0,seq:0};}
- function begin(){if(won||closed)return;if(!firstStart)firstStart=performance.now();if(!maze&&!puzzle)resetAction();active=true;puzzleGame?.start();startPanel.hidden=true;if(!puzzle)status.textContent=maze?'Đến ngôi sao để vào bài.':`0/${flight?4:3}`;last=performance.now();renderer.domElement.focus();tone('move');}
+ function begin(){if(won||closed)return;if(!firstStart){if(onStart()===false){enter();return;}firstStart=performance.now();}if(!maze&&!puzzle)resetAction();active=true;puzzleGame?.start();startPanel.hidden=true;if(!puzzle)status.textContent=maze?'Đến ngôi sao để vào bài.':`0/${flight?4:3}`;last=performance.now();renderer.domElement.focus();tone('move');}
  function paintGates(){const ids=new Set(state.gates.map(a=>a.id));for(const[id,o]of moving){if(!ids.has(id)){scene.remove(o);moving.delete(id);}}
   for(const a of state.gates){let o=moving.get(a.id);if(!o){o=new THREE.Group();scene.add(o);moving.set(a.id,o);const m=mat(flight?0x66818b:0xa66b38,.1);if(flight){const low=a.gap-1.35,high=a.gap+1.35;box(.7,low,1.2,m,0,low/2,0,o);box(.7,7-high,1.2,m,0,(7+high)/2,0,o);const rock=mesh(new THREE.IcosahedronGeometry(.45,0),m,o);rock.position.set(0,Math.max(.2,low-.5),0);}else{box(.15,.9,1.3,m,-.2,.4,0,o);box(.15,.9,1.3,m,.2,.4,0,o);box(.7,.16,1.3,m,0,.65,0,o);}}o.position.x=a.x;}
  }

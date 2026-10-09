@@ -1,0 +1,2 @@
+// Move in the visual row/column; never wrap or jump to an unrelated object index.
+export function spatialNeighbor(points,index,key){const p=points[index];if(!p)return index;const axis=key==='ArrowLeft'||key==='ArrowRight'?0:1,sign=key==='ArrowLeft'||key==='ArrowUp'?-1:1;let best=index,distance=Infinity;points.forEach((q,i)=>{if(i===index||Math.abs(q[1-axis]-p[1-axis])>.1)return;const delta=(q[axis]-p[axis])*sign;if(delta>.1&&delta<distance){best=i;distance=delta;}});return best;}

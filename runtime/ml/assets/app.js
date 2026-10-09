@@ -82,6 +82,11 @@
   TT.cuon = TT.cuon || {};      // vị trí cuộn từng chặng
   TT.lich_su = TT.lich_su || []; // [{ngay, diem}]
   TT.lan_sai = TT.lan_sai || {}; // số lần kiểm tra chưa đạt của từng chặng
+  // Shared lesson controls also save this record. Keep the same object used by
+  // star controls current before a delayed scroll/answer save writes it again.
+  window.addEventListener('cloud-change', function () {
+    if (window.PortalCloud?.ready) Object.assign(TT, PortalCloud.peek());
+  });
   var luuDuoc = true;
   function ghi() {
     try { localStorage.setItem(LUU, JSON.stringify(TT)); } catch (e) { luuDuoc = false; }

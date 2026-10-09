@@ -10,7 +10,7 @@
  * Âm thanh tự tạo bằng Web Audio (không tải file nhạc). Máy yếu: tự chuyển chế độ nhẹ.
  */
 import * as THREE from "three";
-import {stationGame} from './quest-games.js?v=6b348f273601';
+import {stationGame} from './quest-games.js?v=93713fcc72aa';
 
 const B = window.BAI;
 const CFG = Object.assign({ ten: "Thế giới " + B.tieu_de, trang_doc: "index.html",
@@ -651,6 +651,8 @@ function moMenu(hien) {
   menu.classList.toggle("hien", hien); nutMenu.setAttribute("aria-expanded", String(hien));
   if (!hien) return;
   menu.innerHTML = "";
+  const student=window.PortalCloud?.profile;
+  menu.appendChild(h('p',{class:'q-student',text:student?student.display_name+' · '+student.class_label:'Người học'}));
   menu.appendChild(h("h4", { text: "Dịch chuyển tới" }));
   TRAM.forEach(t => menu.appendChild(h("button", { text: "Trạm " + (t.i + 1) + " · " + (B.chang[t.i].ten_ngan || B.chang[t.i].ten) + (passed(t.i) ? " ✓" : ""),
     onclick: () => { moMenu(false); dichChuyen(t); }, ...(t.i > qua() && !window.PORTAL_FREE_NAV ? { disabled: "" } : {}) })));
@@ -662,7 +664,8 @@ function moMenu(hien) {
   menu.appendChild(h("h4", { text: "Khác" }));
   menu.appendChild(h("button", {text:"Bài học 2D",onclick:()=>parent.postMessage({type:'portal-switch-read'},location.origin)}));
   menu.appendChild(h("button", {text:"Về khóa học",onclick:()=>parent.postMessage({type:'portal-back'},location.origin)}));
-  menu.appendChild(h("button", {text:"Họ tên và lớp",onclick:()=>parent.postMessage({type:'portal-account'},location.origin)}));
+  menu.appendChild(h("button", {text:"Đổi người học",onclick:()=>parent.postMessage({type:'portal-account'},location.origin)}));
+  menu.appendChild(h("button", {class:'q-end-session',text:"Kết thúc buổi học",onclick:()=>parent.postMessage({type:'portal-session-end'},location.origin)}));
   menu.appendChild(h("button", { text: "Cách điều khiển", onclick: () => { moMenu(false); thongBao(CAM_UNG ?
     "Kéo ở nửa trái màn hình để đi · chạm vào trạm để tự đi tới · bấm nút vàng để vào trạm." :
     "WASD hoặc phím mũi tên để đi · E / Enter để vào trạm · kéo chuột để xoay · lăn chuột để gần/xa · M tắt tiếng.", "", 6000); } }));
@@ -825,7 +828,7 @@ function vaoTram(t){
  if(passed(t.i)||progress.stationGames?.[t.i]){vaoBaiTram(t);return;}
  miniOpen=true;PHIM.clear();CAN.hoat=false;moMenu(false);if(AM.tong)AM.tong.gain.value=0;
  const restore=()=>{miniOpen=false;if(AM.tong)AM.tong.gain.value=QS.am?.8:0;renderer.domElement.focus();};
- stationGame({theme:THEME,seed:B.bai*10+t.i,title:B.chang[t.i].ten,sound:QS.am,onEnter:()=>{
+ stationGame({theme:THEME,seed:B.bai*10+t.i,title:B.chang[t.i].ten,sound:QS.am,onStart:()=>{const C=window.PortalCloud;if(!C)return false;const s=C.peek();s.stationGames={...s.stationGames,[t.i]:true};return C.save(C.packet.lesson.lesson_key,s);},onEnter:()=>{
    const C=window.PortalCloud;if(C){const state=C.peek();state.stationGames={...state.stationGames,[t.i]:true};C.save(C.packet.lesson.lesson_key,state);}
    restore();vaoBaiTram(t);
  },onCancel:restore});

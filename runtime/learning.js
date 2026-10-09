@@ -30,7 +30,7 @@ window.LessonLearning=(C)=>{
   if(kind==='ml')for(const el of document.querySelectorAll('.the'))if(el.querySelector('h2')?.textContent===stage?.title&&!el.querySelector('.level-label')){const label=document.createElement('span');label.className='learning-pill level-label';label.dataset.level=stage.level;label.textContent=labels[stage.level];el.prepend(label);}
   if(embedded){
    for(const btn of document.querySelectorAll('#nextBtn,[data-go-step]'))if(btn.textContent!=='Về đảo · chọn trạm tiếp theo')btn.textContent='Về đảo · chọn trạm tiếp theo';
-   if(!document.querySelector('#station-return')){const bar=document.createElement('div');bar.className='stage-return';bar.id='station-return';bar.innerHTML='<span>Học tập trung trong trạm · tiến độ được giữ</span><button>Về đảo 3D</button>';bar.querySelector('button').onclick=returnToWorld;document.body.append(bar);}
+   if(!document.querySelector('#station-return')){const bar=document.createElement('div');bar.className='stage-return';bar.id='station-return';bar.innerHTML='<span>Học tập trung trong trạm · tiến độ được giữ</span><button>Về đảo 3D</button><button id="learning-session-end">Kết thúc buổi học</button>';bar.querySelector('button').onclick=returnToWorld;bar.querySelector('#learning-session-end').onclick=()=>parent.postMessage({type:'portal-session-end'},location.origin);document.body.append(bar);}
   }
   const now=JSON.stringify(st);if(now!==previous){previous=now;parent.postMessage({type:'lsts-location',lesson:key,index:st.index,stage:st.id,final:st.final,title:stage?.title||p.lesson.title,mode:'read'},location.origin);}
  }
@@ -61,5 +61,6 @@ window.LessonLearning=(C)=>{
  }
  let timer;const observer=new MutationObserver(()=>{clearTimeout(timer);timer=setTimeout(annotate,40)});observer.observe(document.body,{childList:true,subtree:true});annotate();
  window.LearningSupport={currentStage,returnToWorld};
+ LessonMissingTasks(C,currentStage,rootForPanel);
 };
 

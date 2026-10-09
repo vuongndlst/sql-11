@@ -18,7 +18,7 @@ window.CourseWorld=async(p,C,originBase)=>{
  const m=document.createElement('script');m.type='module';m.src=asset('ml/assets/quest3d.js');document.head.append(m);
  addEventListener('storage',e=>{if(e.key!==key)dispatchEvent(new StorageEvent('storage',{key}))});
  const child=()=>document.querySelector('.q-khung iframe')?.contentWindow;
- addEventListener('message',e=>{if(e.origin!==location.origin)return;if(e.source===child()&&e.data?.type==='portal-status'){C.setNestedPending(e.data.pending);parent.postMessage(e.data,location.origin)}if(e.source===child()&&['lsts-location','lsts-exported'].includes(e.data?.type))parent.postMessage(e.data,location.origin);if(e.source===parent&&['portal-flush','portal-download'].includes(e.data?.type)&&child())child().postMessage(e.data,location.origin)});
+ addEventListener('message',e=>{if(e.origin!==location.origin)return;if(e.source===child()&&e.data?.type==='portal-status'){C.setNestedPending(e.data.pending);parent.postMessage(e.data,location.origin)}if(e.source===child()&&['lsts-location','lsts-exported','portal-session-end'].includes(e.data?.type))parent.postMessage(e.data,location.origin);if(e.source===parent&&['portal-flush','portal-download'].includes(e.data?.type)&&child())child().postMessage(e.data,location.origin)});
  setTimeout(()=>{if(!document.querySelector('#quest canvas')){const u=new URL(location.href);u.searchParams.set('mode','read');location.replace(u.href)}},15000);
  parent.postMessage({type:'portal-lesson',kind},location.origin);
 };
