@@ -1,4 +1,4 @@
-import {CATALOG,shuffleBag} from './arcade-rules.js?v=1da0cf0101b9';
+import {CATALOG,shuffleBag} from './arcade-rules.js?v=4753a04700cc';
 const randomSeed=()=>{const a=new Uint32Array(1);crypto.getRandomValues(a);return a[0];};
 // Selection is persisted before Start. A reload cannot re-roll a station.
 export async function assignStation(C,stage){const S=window.LocalLearning;if(!C?.profile?.id||!S||!C.packet||!C.allowed())return null;const pid=C.profile.id,lid=C.packet.lesson.lesson_key,key=lid+':'+stage;

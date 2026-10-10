@@ -1,0 +1,2254 @@
+{
+  "schemaVersion": 1,
+  "revision": 2,
+  "status": "active",
+  "tone": "doi-thuong-vui-vua-phai",
+  "date": "2026-10-10",
+  "language": "vi-VN",
+  "count": 150,
+  "notes": [
+    "Bản 2: 150 câu đời thường, ngắn và vui; dùng cho sự kiện hoàn thành lần đầu.",
+    "Bản 1 được lưu tại archive_v1; không lấy nội dung cũ trộn lại vào bộ chọn.",
+    "Tất cả câu yêu cầu sự kiện hoàn thành hợp lệ. Điều kiện điểm là điều kiện bổ sung.",
+    "perfect_score: có số câu đúng/tổng câu của lượt hiện tại, total > 0 và correct == total.",
+    "exact_score: correct == 10 và total == 10 trong lượt hiện tại; không quy đổi điểm 6/6 thành 10/10.",
+    "C++/Python nhiệm vụ lập trình không có điểm trắc nghiệm thì dùng câu chung hoặc câu riêng khóa.",
+    "certificate_play chỉ dùng sau khi quyền nhận chứng chỉ đã được ghi nhận.",
+    "Tên khóa là tag; SQL viết trong lời chúc là minh họa vui, không phải bài tập chạy truy vấn.",
+    "Placeholder duy nhất: {correct} và {total}; chỉ thay bằng số nguyên được kiểm tra.",
+    "Sau khi duyệt, JSON là nguồn nội dung để biên tập; không chạy lại script khởi tạo đè bản đã sửa."
+  ],
+  "lines": [
+    {
+      "id": "stage-001",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Dữ vậy trời! Qua luôn rồi!",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-002",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Ủa, làm được thiệt nè! Cười một cái coi!",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-003",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Hay nha! Thầy thích pha này đó.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-004",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Xong rồi! Giờ mới được thở cái phào nè.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-005",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Cái mặt tỉnh bơ vậy thôi chứ chắc đang vui lắm ha?",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-006",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Cho thầy flex học sinh một chút nha!",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-007",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Nãy còn “ủa?”, giờ thành “à!” rồi ha.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-008",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Được đó con! Bữa nay có chuyện để khoe rồi.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-009",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Qua rồi nha! Đừng ngồi im quá, thầy tưởng màn hình bị đứng.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-010",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Giỏi quá! Thầy khen thiệt, không phải câu xã giao đâu.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-011",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Con làm được rồi. Tự vỗ vai mình một cái đi!",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-012",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Ê, cũng gì và này nọ đó chứ!",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-013",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Rồi, tới công chuyện với con luôn!",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-014",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Xong một chặng! Nhìn dấu tích này thấy đã ghê.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-015",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Thầy thấy rồi nha. Khỏi giả bộ “cũng bình thường”!",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-016",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Làm được rồi thì cười đi. Thầy đâu có thu phí nụ cười.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-017",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Nãy hơi căng, giờ thấy cưng rồi đó.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-018",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Qua trạm rồi! Cái ghế vẫn bình thường, người ngồi trên đó thì hơi ngầu.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-019",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Đã nha! Cho thầy một cái gật đầu tự hào coi.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-020",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Con vừa làm thầy phải nói: “Ồ, được!”",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-021",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Xong rồi đó! Tự thưởng một cái duỗi vai nha.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-022",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Ủa, bạn này là học sinh lớp mình hả? Hơi bị có nghề nha!",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-023",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Một chặng nữa xong. Thấy mình cũng hay hay chưa?",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-024",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Thầy đang khen con đó. Đừng quay qua nhìn bạn bên cạnh!",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-025",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Này thì “để con thử”! Thử xong làm được luôn.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-026",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Qua rồi! Thầy xin phép giơ ngón cái hơi lâu một chút.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-027",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Ngon lành nha! Câu này thầy nói về bài làm, chưa phải đồ ăn.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-028",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Được ghê! Thầy phải ngồi ngay ngắn lại để khen cho đàng hoàng.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-029",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Vậy là xong! Cái dấu tích này coi bộ hợp với con đó.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-030",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Con làm được mà! Giờ có bằng chứng ngay đây nè.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-031",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Hay quá! Thầy vừa “ồ” một tiếng hơi lớn.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-032",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Chặng này xong rồi. Có muốn tự nói “mình hay quá” cũng được nha.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-033",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Thầy khen một câu thôi: quá được!",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-034",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Qua rồi con ơi! Cái này đáng một nụ cười rộng hơn bình thường.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-035",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Nhìn kết quả coi! Ừ, của con đó, không phải hình minh họa.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-036",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Làm xong rồi mà mặt vẫn lạnh vậy? Ngầu dữ!",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-037",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Thầy vừa tính cổ vũ thì con làm được luôn. Cho thầy khen bù nha!",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-038",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Xử lý được rồi! Bữa nay có quyền vui một chút đó.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-039",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Thấy chưa, con làm được nè! Thầy nói vậy có sai đâu.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-040",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Vừa lòng thầy lắm! Con cũng nhớ vui với mình nha.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-041",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Xong! Tự chấm cho mình một cái “ổn áp” trước đã.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-042",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Đừng lướt qua lời khen này. Thầy đã viết tới tên “con” rồi đó!",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-043",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Hơi bị mượt nha! Cho thầy nhìn kết quả thêm cái nữa.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-044",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Chặng này qua rồi. Thầy đứng đây vỗ tay, con cứ nhận lời khen đi.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-045",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Cái cảm giác “à, làm được rồi” này đã ha!",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-046",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Được rồi đó con! Ngồi thẳng lên chút cho hợp phong thái người vừa qua ải.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-047",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Thầy xin một tràng pháo tay. Ai chưa rảnh thì vỗ tay trong đầu cũng được!",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-048",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Làm xong rồi! Kể lại chắc chỉ cần hai chữ: “con qua”.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-049",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Con có thấy cái dấu tích không? Nó đang thay thầy khen con đó.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "stage-050",
+      "group": "stage",
+      "kind": "stage",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Qua chặng rồi nha! Giờ nghe thầy xem cả lớp dừng ở đâu nhé.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-001",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Đinh Thiện Lý có học sinh VIP PRO như con, cũng hơi bị tự hào đó nha!",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-002",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Boss tưởng mình ghê. Cho tới khi gặp con.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-003",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Boss nằm rồi! Con đứng dậy duỗi vai cái coi.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-004",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Được nha! Về nhà nhớ kể đoạn con thắng, đừng kể mỗi đoạn game vui.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-005",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Boss: “Ủa, sao bạn này làm được?” Thầy: “Học sinh lớp tôi mà!”",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-006",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Xong cả bài rồi! Con có quyền nhìn màn hình với vẻ rất hài lòng.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-007",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Boss giờ đang giả bộ mất mạng. Chứ thua thì ngại nói lắm.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-008",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Con thắng rồi! Thầy chưa kịp chuẩn bị thảm đỏ, thông cảm nha.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-009",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Boss ra oai cho đã, cuối cùng cũng phải vỗ tay.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-010",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Cái mặt thầy lúc này: tự hào, hơi tự hào, rất tự hào.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-011",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Con qua rồi! Ai hỏi hôm nay học gì thì nhớ kể vụ này nha.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-012",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Boss đang ngồi nghĩ lại cách nói chuyện với con.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-013",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Rồi, ai ngầu? Con ngầu. Khỏi bàn nữa!",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-014",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Chứng chỉ có tên con rồi đó. Nhìn tên mình trên đó thấy vui ha!",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-015",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Thầy tính nói nhiều lắm. Mà thôi: đỉnh nha con!",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-016",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Boss xin phép đi uống nước cho bớt quê.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-017",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Bài này xong rồi! Hôm nay con có chuyện vui mang về nhà.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-018",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Boss hết làm mặt nghiêm rồi. Giờ nhìn nó cũng hiền ha.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-019",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Thầy xin phép khoe: “Bạn này học lớp tôi nè!”",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-020",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Con thắng rồi đó! Đừng nhìn thầy, thầy cũng đang vui ké.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-021",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Boss nãy giờ diễn hơi nhiều. Con giải quyết gọn luôn.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-022",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Qua cả bài rồi! Cảm giác này đáng để ngắm thêm vài giây.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-023",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Boss: “Mình có thể nói chuyện lại không?” Con: “Để con nhận chứng chỉ đã.”",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-024",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Con nhà ai mà hay dữ? À, học sinh lớp mình!",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-025",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Thầy vừa gật đầu một cái rất chắc: được đó con!",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-026",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Boss đã bớt tự tin. Con thì cứ tự tin thêm chút nha.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-027",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Chứng chỉ tới rồi! Nhớ nhìn tên cho đúng trước khi đem khoe nha.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-028",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Đẹp! Thầy nói cái kết này đẹp, con cũng đẹp phong độ luôn.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-029",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Boss vừa thua xong đã hỏi: “Lớp này còn nhận học sinh không?”",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-030",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Qua rồi nha! Hôm nay đi ra khỏi bài học với dáng hơi oai cũng được.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-031",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Thầy đang cười đó. May là popup không chụp được mặt thầy.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-032",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Boss im rồi. Giờ tới lượt con nói: “Con làm được!”",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-033",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Làm xong cả bài! Nghe câu đó đã hơn nghe chuông báo thức ha.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-034",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Con qua rồi! Bữa nay ba mẹ hỏi thì có cái để kể ngay.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-035",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Boss định nói câu cuối. Mà thấy kết quả nên thôi.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-036",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Thầy không có cúp thật. Chứng chỉ này con cầm đỡ nha, cũng xịn mà!",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-037",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Nãy Boss đứng giữa đường. Giờ tự né qua một bên rồi.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-038",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Con vừa làm thầy muốn gọi cả lớp: “Ê, nhìn nè!”",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-039",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Chứng chỉ đang chờ con. Boss đang chờ hết quê.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-040",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Rồi xong! Cho phép bản thân vui một chút, đừng nghiêm quá.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-041",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Boss hôm nay học được một điều: đừng coi thường học sinh lớp mình.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-042",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Con thắng rồi! Tự nói “mình cũng hay” không bị trừ gì đâu nha.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-043",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Thầy chỉ hỏi nhẹ: con có định cười hay để thầy cười giùm?",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-044",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Boss đang tập vỗ tay cho đúng nhịp. Con cứ nhận chứng chỉ trước đi.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-045",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Đã làm xong, đã qua ải. Hôm nay về kể chuyện cho có cao trào nha!",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-046",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Thầy thấy con rồi. Người đang đọc câu này, khỏi trốn sau màn hình!",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-047",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Boss vừa xin một phút bình tĩnh. Con thì nhận lời khen trước nha.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-048",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Chứng chỉ này đem khoe được đó. Nhớ kể thêm con đã làm gì nha.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-049",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Xong rồi con ơi! Bữa nay đáng một cái gật đầu thiệt mạnh.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "boss-050",
+      "group": "boss",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Boss thua, con vui, thầy vui ké. Cả ba đều có việc để làm rồi!",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "perfect-001",
+      "group": "perfect",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "{correct}/{total} luôn hả? Được dữ vậy con!",
+      "condition": {
+        "type": "perfect_score",
+        "scoreKnown": true,
+        "scope": "current_attempt"
+      }
+    },
+    {
+      "id": "perfect-002",
+      "group": "perfect",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Đúng hết rồi! Thầy phải đọc lại cho chắc, vui quá mà.",
+      "condition": {
+        "type": "perfect_score",
+        "scoreKnown": true,
+        "scope": "current_attempt"
+      }
+    },
+    {
+      "id": "perfect-003",
+      "group": "perfect",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Không sai câu nào! Con làm vậy Boss biết nói gì nữa?",
+      "condition": {
+        "type": "perfect_score",
+        "scoreKnown": true,
+        "scope": "current_attempt"
+      }
+    },
+    {
+      "id": "perfect-004",
+      "group": "perfect",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "{correct}/{total}! Con cho cái mặt vui lên chút coi!",
+      "condition": {
+        "type": "perfect_score",
+        "scoreKnown": true,
+        "scope": "current_attempt"
+      }
+    },
+    {
+      "id": "perfect-005",
+      "group": "perfect",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Đúng hết! Rồi, hôm nay ai được quyền hơi tự hào nè?",
+      "condition": {
+        "type": "perfect_score",
+        "scoreKnown": true,
+        "scope": "current_attempt"
+      }
+    },
+    {
+      "id": "perfect-006",
+      "group": "perfect",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Boss đưa câu nào, con đúng câu đó. Nó quê thấy rõ luôn.",
+      "condition": {
+        "type": "perfect_score",
+        "scoreKnown": true,
+        "scope": "current_attempt"
+      }
+    },
+    {
+      "id": "perfect-007",
+      "group": "perfect",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "{correct}/{total} nha! Chụp lại khoe được rồi đó.",
+      "condition": {
+        "type": "perfect_score",
+        "scoreKnown": true,
+        "scope": "current_attempt"
+      }
+    },
+    {
+      "id": "perfect-008",
+      "group": "perfect",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Đúng hết trong lượt này! Thầy khen lớn một tiếng cho con nghe.",
+      "condition": {
+        "type": "perfect_score",
+        "scoreKnown": true,
+        "scope": "current_attempt"
+      }
+    },
+    {
+      "id": "perfect-009",
+      "group": "perfect",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Không sai câu nào mà mặt tỉnh bơ vậy? Nể thiệt!",
+      "condition": {
+        "type": "perfect_score",
+        "scoreKnown": true,
+        "scope": "current_attempt"
+      }
+    },
+    {
+      "id": "perfect-010",
+      "group": "perfect",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "{correct}/{total}! Ba mẹ ơi, con có chuyện vui để kể nè!",
+      "condition": {
+        "type": "perfect_score",
+        "scoreKnown": true,
+        "scope": "current_attempt"
+      }
+    },
+    {
+      "id": "perfect-011",
+      "group": "perfect",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Đúng sạch luôn! Boss giờ chỉ biết ngồi gãi đầu.",
+      "condition": {
+        "type": "perfect_score",
+        "scoreKnown": true,
+        "scope": "current_attempt"
+      }
+    },
+    {
+      "id": "perfect-012",
+      "group": "perfect",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Lượt này đúng hết. Thầy đang gật đầu liên tục đó nha.",
+      "condition": {
+        "type": "perfect_score",
+        "scoreKnown": true,
+        "scope": "current_attempt"
+      }
+    },
+    {
+      "id": "perfect-013",
+      "group": "perfect",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Đúng hết rồi con! Câu “con làm được” hôm nay nghe đã ghê.",
+      "condition": {
+        "type": "perfect_score",
+        "scoreKnown": true,
+        "scope": "current_attempt"
+      }
+    },
+    {
+      "id": "perfect-014",
+      "group": "perfect",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "{correct}/{total}! Thầy hết chữ rồi, cho thầy dùng dấu chấm than!",
+      "condition": {
+        "type": "perfect_score",
+        "scoreKnown": true,
+        "scope": "current_attempt"
+      }
+    },
+    {
+      "id": "perfect-015",
+      "group": "perfect",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Con đúng hết. Boss xin phép im để giữ chút phong độ cuối cùng.",
+      "condition": {
+        "type": "perfect_score",
+        "scoreKnown": true,
+        "scope": "current_attempt"
+      }
+    },
+    {
+      "id": "perfect-016",
+      "group": "perfect",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Đúng trọn lượt này luôn! Rồi, cười đi, ai cấm đâu!",
+      "condition": {
+        "type": "perfect_score",
+        "scoreKnown": true,
+        "scope": "current_attempt"
+      }
+    },
+    {
+      "id": "perfect-017",
+      "group": "perfect",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "{correct}/{total}! Tự ngắm kết quả thêm lần nữa cũng được nha.",
+      "condition": {
+        "type": "perfect_score",
+        "scoreKnown": true,
+        "scope": "current_attempt"
+      }
+    },
+    {
+      "id": "perfect-018",
+      "group": "perfect",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Không sai câu nào! Bữa nay kể chuyện nhớ nhấn mạnh đoạn này.",
+      "condition": {
+        "type": "perfect_score",
+        "scoreKnown": true,
+        "scope": "current_attempt"
+      }
+    },
+    {
+      "id": "perfect-019",
+      "group": "perfect",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Đúng hết! Thầy chưa có hoa, gửi con một tràng vỗ tay trước nha.",
+      "condition": {
+        "type": "perfect_score",
+        "scoreKnown": true,
+        "scope": "current_attempt"
+      }
+    },
+    {
+      "id": "exact10-001",
+      "group": "exact10",
+      "kind": "boss",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "10/10 luôn! Ba mẹ ơi, hôm nay con có chuyện để khoe rồi!",
+      "condition": {
+        "type": "exact_score",
+        "correct": 10,
+        "total": 10,
+        "scope": "current_attempt"
+      }
+    },
+    {
+      "id": "cpp-001",
+      "group": "cpp",
+      "kind": "boss",
+      "courses": [
+        "cpp"
+      ],
+      "text": "Code chạy rồi, Boss im rồi. Con cười được rồi đó!",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "cpp-002",
+      "group": "cpp",
+      "kind": "boss",
+      "courses": [
+        "cpp"
+      ],
+      "text": "C++ xong rồi! Hôm nay dấu chấm phẩy cũng phải nể con chút.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "cpp-003",
+      "group": "cpp",
+      "kind": "boss",
+      "courses": [
+        "cpp"
+      ],
+      "text": "Được nha! Gõ code mà có cái kết vui như vậy là thầy thích rồi.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "cpp-004",
+      "group": "cpp",
+      "kind": "boss",
+      "courses": [
+        "cpp"
+      ],
+      "text": "Boss C++: “Bạn học lớp 8 thiệt hả?” Thầy: “Ừ, lớp tôi đó!”",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "cpp-005",
+      "group": "cpp",
+      "kind": "boss",
+      "courses": [
+        "cpp"
+      ],
+      "text": "Qua rồi! Giờ cout có in “con vui quá” thì thầy cũng hiểu.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "python-001",
+      "group": "python",
+      "kind": "boss",
+      "courses": [
+        "python"
+      ],
+      "text": "Python xong rồi! Thầy muốn print một câu: “Hay nha con!”",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "python-002",
+      "group": "python",
+      "kind": "boss",
+      "courses": [
+        "python"
+      ],
+      "text": "Code đã chạy, con đã qua. Nova đứng bên kia vỗ tay muốn mỏi cánh rồi!",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "python-003",
+      "group": "python",
+      "kind": "boss",
+      "courses": [
+        "python"
+      ],
+      "text": "Được ghê! Bữa nay con với Python nói chuyện hiểu nhau rồi ha.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "python-004",
+      "group": "python",
+      "kind": "boss",
+      "courses": [
+        "python"
+      ],
+      "text": "Boss Python đứng hình rồi. Lần này không phải lỗi chương trình đâu.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "python-005",
+      "group": "python",
+      "kind": "boss",
+      "courses": [
+        "python"
+      ],
+      "text": "Qua bài rồi! Nhớ xuống dòng khi viết code, còn lời khen này thầy nói liền một hơi!",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "sql-001",
+      "group": "sql",
+      "kind": "boss",
+      "courses": [
+        "sql"
+      ],
+      "text": "SQL xong rồi! Thầy SELECT đúng con để khen nha.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "sql-002",
+      "group": "sql",
+      "kind": "boss",
+      "courses": [
+        "sql"
+      ],
+      "text": "Tìm dữ liệu thì có WHERE. Tìm người đáng khen thì nhìn con là thấy.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "sql-003",
+      "group": "sql",
+      "kind": "boss",
+      "courses": [
+        "sql"
+      ],
+      "text": "Qua bài SQL rồi! Chứng chỉ đang chờ, khỏi viết truy vấn để tìm nha.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "sql-004",
+      "group": "sql",
+      "kind": "boss",
+      "courses": [
+        "sql"
+      ],
+      "text": "Boss SQL tưởng giấu trong bảng là con không thấy. Giờ nó hết dám nói rồi.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "sql-005",
+      "group": "sql",
+      "kind": "boss",
+      "courses": [
+        "sql"
+      ],
+      "text": "Con làm xong rồi! Lời khen này gửi đúng người, khỏi lọc lại nha.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "ml-001",
+      "group": "ml",
+      "kind": "boss",
+      "courses": [
+        "ml"
+      ],
+      "text": "Máy học, con cũng học. Bữa nay thầy khen con trước nha!",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "ml-002",
+      "group": "ml",
+      "kind": "boss",
+      "courses": [
+        "ml"
+      ],
+      "text": "ML xong rồi! Boss định tỏ vẻ thông minh mà con qua luôn.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "ml-003",
+      "group": "ml",
+      "kind": "boss",
+      "courses": [
+        "ml"
+      ],
+      "text": "Qua bài rồi! Cái mặt hài lòng của thầy lúc này khỏi cần AI nhận diện.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "ml-004",
+      "group": "ml",
+      "kind": "boss",
+      "courses": [
+        "ml"
+      ],
+      "text": "Thầy dự đoán con đang hơi vui. Đúng thì cười một cái coi!",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "ml-005",
+      "group": "ml",
+      "kind": "boss",
+      "courses": [
+        "ml"
+      ],
+      "text": "Boss ML: “Ai dạy bạn vậy?” Con cứ chỉ thầy, thầy nhận lời khen ké!",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "troll-001",
+      "group": "troll",
+      "kind": "certificate_play",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Ê, ở đây nè! Cái nút hơi thích làm màu thôi.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "troll-002",
+      "group": "troll",
+      "kind": "certificate_play",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Ủa, nó qua bên kia rồi! Chắc muốn được chú ý thêm chút.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "troll-003",
+      "group": "troll",
+      "kind": "certificate_play",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Con qua Boss rồi mà cái nút vẫn chưa chịu hết diễn!",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "troll-004",
+      "group": "troll",
+      "kind": "certificate_play",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Chứng chỉ của con có rồi nha. Chỉ có cái nút đang nhây thôi.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "troll-005",
+      "group": "troll",
+      "kind": "certificate_play",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Nút gì mà tăng động dữ! Nó có xin phép thầy đâu.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "troll-006",
+      "group": "troll",
+      "kind": "certificate_play",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Ở đây! Ở đây! Thầy cũng đang tìm cái nút cùng con nè.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "troll-007",
+      "group": "troll",
+      "kind": "certificate_play",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Boss thua rồi, cái nút định cứu chút thể diện. Thôi kệ nó diễn tí!",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "troll-008",
+      "group": "troll",
+      "kind": "certificate_play",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Cái nút tưởng mình là nhân vật chính. Con mới là nhân vật chính nha!",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "troll-009",
+      "group": "troll",
+      "kind": "certificate_play",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Đừng giận, chứng chỉ vẫn chờ con. Nút này hơi nghịch thôi.",
+      "condition": {
+        "type": "completed"
+      }
+    },
+    {
+      "id": "troll-010",
+      "group": "troll",
+      "kind": "certificate_play",
+      "courses": [
+        "cpp",
+        "python",
+        "sql",
+        "ml"
+      ],
+      "text": "Rồi rồi, đủ diễn rồi. Nhận chứng chỉ đi con!",
+      "condition": {
+        "type": "completed"
+      }
+    }
+  ]
+}

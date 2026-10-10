@@ -6,7 +6,7 @@
  const base=href=>{const b=document.createElement('base');b.href=new URL(href,originBase);document.head.prepend(b)};
  const account=()=>({name:C.profile.display_name,className:C.profile.class_label,studentCode:C.profile.student_code,userId:C.user.id});
  try{
- const p=await C.init(),kind=p.payload.kind;if(kind!=='ml'&&kind!=='activity'&&new URLSearchParams(location.search).get('mode')==='quest'){await script('course-world.js');await CourseWorld(p,C,originBase);return}css('focus.css');if(innerWidth<700)document.body.classList.add('focus-hide-nav');parent.postMessage({type:'portal-view',world:new URLSearchParams(location.search).get('mode')==='quest'&&kind!=='activity'},location.origin);document.title=p.lesson.title+' · LSTS Learning';
+ const p=await C.init();await script('celebration-rules.js');await script('celebration.js');LessonCelebration.attach(C,p,originBase);const kind=p.payload.kind;if(kind!=='ml'&&kind!=='activity'&&new URLSearchParams(location.search).get('mode')==='quest'){await script('course-world.js');await CourseWorld(p,C,originBase);return}css('focus.css');if(innerWidth<700)document.body.classList.add('focus-hide-nav');parent.postMessage({type:'portal-view',world:new URLSearchParams(location.search).get('mode')==='quest'&&kind!=='activity'},location.origin);document.title=p.lesson.title+' · LSTS Learning';
  document.addEventListener('click',e=>{const b=e.target.closest('[data-action="home"]');if(b){e.preventDefault();e.stopImmediatePropagation();parent.postMessage({type:'portal-back'},location.origin)}},true);
  await script('hope-stars.js');
  if(kind==='sql'){

@@ -10,8 +10,9 @@
  * Âm thanh tự tạo bằng Web Audio (không tải file nhạc). Máy yếu: tự chuyển chế độ nhẹ.
  */
 import * as THREE from "three";
-import {stationGame} from './quest-games.js?v=1da0cf0101b9';
-import {assignStation,startStation,finishStation} from './arcade-selection.js?v=1da0cf0101b9';
+import {upgradeActor,addLandmark} from "./blender-art.js?v=4753a04700cc";
+import {stationGame} from './quest-games.js?v=4753a04700cc';
+import {assignStation,startStation,finishStation} from './arcade-selection.js?v=4753a04700cc';
 
 const B = window.BAI;
 const CFG = Object.assign({ ten: "Thế giới " + B.tieu_de, trang_doc: "index.html",
@@ -555,6 +556,8 @@ const BIT = (() => {
   return { g, than, den, lua, bong_dat, mat: [mat_trai, mat_phai] };
 })();
 
+const blenderGuide=upgradeActor(BIT.than,{scale:1,offsetY:-1.1,color:CFG.mau,managed:false});
+addLandmark(scene,THEME,[-7,0,-7],1.25);addLandmark(scene,THEME,[7,0,-7],1.0);vatCan(-7,-7,1.7);vatCan(7,-7,1.5);
 // ------------------------------------------------------------------ âm thanh (Web Audio, tự tạo)
 const AM = { ctx: null };
 function khoiDongAm() {
@@ -1009,7 +1012,7 @@ function khung_hinh() {
   }
   vaCham(BIT.g.position);
   BIT.than.position.y = 1.15 + (IT_CHUYEN_DONG ? 0 : Math.sin(t * 3) * 0.08);
-  BIT.than.rotation.x = l * 0.18;
+  BIT.than.rotation.x = l * 0.08;blenderGuide.animate(t,'run',IT_CHUYEN_DONG?0:l);
   BIT.bong_dat.position.set(BIT.g.position.x, 0.04, BIT.g.position.z);
   BIT.lua.scale.setScalar(1 + l * 0.35 + Math.sin(t * 20) * 0.05);
   BIT.den.material.color.setHSL(0.12, 1, 0.55 + Math.sin(t * 4) * 0.12);
