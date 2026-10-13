@@ -369,6 +369,16 @@ code, pre, .tt-dong, .tt-ma, .tt-man-hinh { font-variant-ligatures: none; font-f
 .tt .tt-the b:empty { display: none; }
 .tt .tt-the b.tt-muc { font-size: 15px; display: block; }
 .tt .tt-hai-cot .tt-the-hang { align-content: start; }
+.tt .tt-buoc { margin: 6px 0 10px; padding-left: 22px; color: var(--chu); font-size: 15px; }
+.tt .tt-buoc li { margin: 3px 0; }
+.tt .tt-k-so { font-size: 22px; color: var(--xanh-tuoi); font-variant-numeric: tabular-nums; }
+.tt .tt-cham { display: inline-block; width: 10px; height: 10px; border-radius: 50%; vertical-align: middle; }
+.tt .tt-cham.tt-o { width: 13px; height: 13px; border-radius: 3px; border: 1px solid #94A3B8; }
+.tt .tt-o-val { display: inline-block; width: 9px; height: 9px; border: 1.6px solid var(--chu-phu); background: #fff; vertical-align: middle; }
+.tt .tt-phieu { display: flex; height: 24px; border-radius: 8px; overflow: hidden; border: 1px solid var(--vien); margin: 6px 0; font-size: 13px; font-weight: 600; }
+.tt .tt-phieu span { display: flex; align-items: center; justify-content: center; color: #fff; transition: width .25s; min-width: 0; overflow: hidden; }
+.tt .tt-phieu-b { color: #422006 !important; }
+.tt-knn-k .tt-the-hang { grid-template-columns: repeat(auto-fit, minmax(112px, 1fr)); }
 .tt .tt-app { border: 1px solid var(--vien); border-radius: 12px; padding: 14px 16px; background: #fff; max-width: 560px; }
 .tt .tt-app-ten { font-weight: 700; font-size: 17px; margin-bottom: 8px; }
 .tt .tt-app-ra { margin-top: 10px; padding: 10px 12px; border-radius: 8px; background: var(--xanh-nhat); font-size: 16px; }
@@ -387,3 +397,57 @@ pre.man-hinh::before { content: "Màn hình"; display: block; font-size: 11px; c
   font-family: "Be Vietnam Pro", sans-serif; }
 pre.loi { border-left-color: var(--do); color: #FCA5A5; }
 pre.loi::before { content: "Máy báo lỗi"; }
+
+/* 12/10/2026 — bản đồ quy trình + Code → Kết quả → Đọc kết quả (code mẫu không copy) */
+.quy-trinh { border: 1px solid var(--vien); border-radius: 12px; padding: 12px 14px; margin: 14px 0; background: #fff; }
+.quy-trinh .tieu-de-hop { font-weight: 700; color: var(--xanh); margin-bottom: 8px; }
+.qt-buoc { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; }
+.qt-buoc li { border: 1px solid var(--vien); border-radius: 10px; padding: 8px 10px; background: var(--nen); display: flex; flex-direction: column; gap: 3px; opacity: .78; }
+.qt-buoc li.dang { opacity: 1; border: 2px solid var(--teal); background: #F0FDFA; }
+.qt-buoc .qt-so { display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--xanh); color: #fff; font-weight: 700; font-size: 13px; }
+.qt-buoc li.dang .qt-so { background: var(--teal); }
+.qt-buoc .qt-y { font-size: 14px; color: var(--chu-phu); }
+.qt-buoc .qt-lenh { font-size: 12.5px; white-space: normal; word-break: break-word; }
+.qt-ghi-chu { margin: 8px 0 0; font-size: 15px; color: var(--chu-phu); }
+.code-kq { border: 1px solid #CBD5E1; border-radius: 12px; margin: 16px 0; overflow: hidden; background: #fff; }
+.code-kq .ck-tieu-de { font-weight: 700; padding: 10px 14px 0; color: var(--xanh); font-size: 17px; }
+.code-kq .ck-muc-dich { margin: 6px 14px 10px; }
+.code-kq .ck-nhan { font-size: 12px; letter-spacing: .04em; font-weight: 700; color: #64748B; padding: 6px 14px 2px; }
+.code-kq .ck-ma { background: #0F172A; }
+.code-kq .ck-ma .ck-nhan { color: #94A3B8; }
+.code-kq .ck-ma .ck-nhan b { color: #FDE68A; }
+.code-kq .ck-ma pre { margin: 0; padding: 6px 0 12px; font-family: "JetBrains Mono", Consolas, monospace; font-size: 14.5px; color: #E2E8F0; overflow-x: auto; }
+.code-kq .ck-dong { display: block; padding: 0 14px; white-space: pre; }
+.code-kq .ck-dong i { display: inline-block; width: 2.2em; color: #475569; font-style: normal; user-select: none; }
+.py-cmt { color: #7DD3A8; } .py-str { color: #FCD34D; } .py-kw { color: #93C5FD; }
+.khong-chep, .khong-chep * { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+.code-kq .ck-ra { background: #F8FAFC; border-top: 1px solid var(--vien); padding-bottom: 8px; }
+.code-kq .ck-text { margin: 0 14px; font-family: "JetBrains Mono", Consolas, monospace; font-size: 13.5px; white-space: pre; overflow-x: auto; background: #fff; border: 1px solid var(--vien); border-radius: 8px; padding: 8px 10px; }
+.code-kq .ck-bang { margin: 0 14px; overflow-x: auto; }
+.tu-lam .ck-bang { overflow-x: auto; margin: 6px 0; }
+.tu-lam .ck-bang th, .tu-lam .ck-bang td { white-space: nowrap; padding: 4px 9px; font-size: 13px; }
+.code-kq .ck-bang table { font-size: 13px; width: auto; min-width: 0; border-collapse: collapse; background: #fff; }
+.code-kq .ck-bang th, .code-kq .ck-bang td { white-space: nowrap; padding: 4px 9px; text-align: right; }
+.code-kq .ck-bang tr td:first-child, .code-kq .ck-bang tr th:first-child { font-weight: 700; color: #334155; }
+.code-kq .ck-anh { margin: 6px 14px 0; }
+.code-kq .ck-doc { border-top: 1px solid var(--vien); background: #FFFBEB; padding-bottom: 6px; }
+.code-kq .ck-doc .ck-nhan { color: #92400E; }
+.code-kq .ck-doc ul { margin: 2px 14px 4px; }
+.code-kq .ck-lenh { border-top: 1px solid var(--vien); padding: 8px 14px; font-size: 15px; }
+.code-kq .ck-lenh summary { cursor: pointer; font-weight: 600; color: var(--xanh-chinh); }
+#ck-thong-bao { position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px); background: #0F172A; color: #fff; padding: 10px 16px; border-radius: 10px; font-size: 15px; opacity: 0; pointer-events: none; transition: .25s; z-index: 9999; max-width: calc(100vw - 32px); }
+#ck-thong-bao.hien { opacity: 1; transform: translate(-50%, 0); }
+@media (max-width: 640px) { .code-kq .ck-ma pre { font-size: 13px; } .qt-buoc { grid-template-columns: 1fr 1fr; } }
+
+.code-kq .ck-lam-ngay { background: #ECFDF5; border-top: 1px solid #A7F3D0; color: #065F46; padding: 8px 14px; font-size: 15.5px; }
+.tu-lam { border: 2px dashed var(--teal); border-radius: 12px; padding: 10px 14px; margin: 16px 0; background: #fff; }
+.tu-lam .tl-tieu-de { font-weight: 700; color: var(--teal); margin-bottom: 4px; }
+.tu-lam details { margin-top: 6px; } .tu-lam summary { cursor: pointer; font-weight: 600; color: var(--xanh-chinh); }
+.tu-lam .ck-text { margin: 6px 0; font-family: "JetBrains Mono", Consolas, monospace; font-size: 13.5px; white-space: pre; overflow-x: auto;
+  background: #F8FAFC; border: 1px solid var(--vien); border-radius: 8px; padding: 8px 10px; }
+.cau .ngu-canh { margin: 8px 0 4px; padding: 8px 12px; background: #F8FAFC; border-left: 3px solid var(--teal, #0D9488); border-radius: 6px; font-size: 15px; line-height: 1.55; }
+.cau .cau-bang { margin: 6px 0 8px; overflow-x: auto; }
+.cau .cau-bang table { font-size: 14px; width: auto; min-width: 0; }
+.cau .cau-bang th, .cau .cau-bang td { padding: 4px 10px; }
+ul.du-lieu-chu-giai { columns: 2 260px; column-gap: 24px; margin: 8px 0; padding-left: 18px; font-size: 14px; color: var(--chu-phu); }
+ul.du-lieu-chu-giai li { break-inside: avoid; margin: 2px 0; }

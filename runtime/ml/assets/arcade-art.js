@@ -1,7 +1,7 @@
 import * as THREE from 'three';
-import {RoundedBoxGeometry} from './vendor/geometries/RoundedBoxGeometry.js?v=4753a04700cc';
-import {upgradeActor,addLandmark,upgradePlane} from './blender-art.js?v=4753a04700cc';
-export const PALETTES={workshop:{sky:0xb9ddeb,ground:0x92b98c,accent:0xef953e,roof:0x41677e},space:{sky:0x182849,ground:0x344864,accent:0x55c5e8,roof:0x746db9},archive:{sky:0xcce3d9,ground:0x92bbae,accent:0xe3ad48,roof:0x318b82},research:{sky:0xc9e6dd,ground:0x85bda0,accent:0xf0b650,roof:0x507f67}};
+import {RoundedBoxGeometry} from './vendor/geometries/RoundedBoxGeometry.js?v=648cbdfc9300';
+import {upgradeActor,addLandmark,upgradePlane} from './blender-art.js?v=648cbdfc9300';
+export const PALETTES={workshop:{sky:0xb9ddeb,ground:0x92b98c,accent:0xef953e,roof:0x41677e},space:{sky:0x182849,ground:0x344864,accent:0x55c5e8,roof:0x746db9},archive:{sky:0xcce3d9,ground:0x92bbae,accent:0xe3ad48,roof:0x318b82},research:{sky:0xc9e6dd,ground:0x85bda0,accent:0xf0b650,roof:0x507f67},neural:{sky:0x1d1b4f,ground:0x3b3486,accent:0x22d3ee,roof:0x7c3aed}};
 // Original Blender art with procedural fallback; no third-party character assets.
 export function createArt(scene,theme){const palette=PALETTES[theme]||PALETTES.research,geometries=new Map(),materials=new Map(),textures=new Set(),labels=new Map(),blenderDisposers=[];
  function geometry(key,make){if(!geometries.has(key))geometries.set(key,make());return geometries.get(key);}

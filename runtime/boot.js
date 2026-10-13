@@ -21,16 +21,16 @@
  if(kind==='python')css('python/engine/style.css');else{for(const f of ['base.css','game.css','school.css'])css('cpp/engine/'+f);await script('cpp/engine/scratchblocks.min.js');await script('cpp/engine/scratchblocks-vi.js')}
  await script(kind+'/engine/kit.js');const payload=document.createElement('script');payload.textContent=p.payload.source;document.head.append(payload);payload.remove();window.LESSON.media=p.payload.media;document.body.innerHTML='';await script(kind+'/engine/media.js');if(kind==='cpp')await script('cpp/engine/cpp-runner.js');await script(kind+'/engine/engine.js');
  }else if(kind==='ml'){
- base('ml/'+p.lesson.lesson_key+'/');css('ml/assets/style.css');css('ml/assets/chu_de.css');window.BAI=p.payload.data;
+ base('ml/'+p.lesson.lesson_key+'/');css('ml/assets/style.css');css('ml/assets/chu_de.css');if(window.STANDALONE?.ui==='lab'){document.documentElement.dataset.ui='lab';document.documentElement.dataset.course=STANDALONE.course;css('ml/assets/lab-lesson.css')}window.BAI=p.payload.data;
  const key=(BAI.tien_to_luu||'ml1_')+BAI.ma,storedGet=Storage.prototype.getItem,storedSet=Storage.prototype.setItem;
  const s={...C.state(p.lesson.lesson_key),ten:C.profile.display_name,lop:C.profile.class_label};C.states[p.lesson.lesson_id]=s;
  Storage.prototype.getItem=function(k){return this===localStorage&&k===key?JSON.stringify({...C.peek(),ten:C.profile.display_name,lop:C.profile.class_label}):this===localStorage&&k===(BAI.tien_to_luu||'ml1_')+'quest'?storedGet.call(this,(C.guest?'lsts-guest-settings:':'lsts-portal-settings:')+C.user.id+':'+p.enrollment_id):storedGet.call(this,k)};
  Storage.prototype.setItem=function(k,v){if(this===localStorage&&k===key){const state=JSON.parse(v);state.completed=Boolean(state.dat);C.save(p.lesson.lesson_key,state);return}if(this===localStorage&&k===(BAI.tien_to_luu||'ml1_')+'quest'){storedSet.call(this,(C.guest?'lsts-guest-settings:':'lsts-portal-settings:')+C.user.id+':'+p.enrollment_id,v);return}storedSet.call(this,k,v)};
- await script('ml/assets/the-gioi.js');
+ await script(window.STANDALONE?.world_file||'ml/assets/the-gioi.js');
  parent.postMessage({type:'portal-lesson',kind:'ml'},location.origin);
  if(new URLSearchParams(location.search).get('mode')==='quest'){
  css('ml/assets/quest3d.css');const map=document.createElement('script');map.type='importmap';map.textContent=JSON.stringify({imports:{three:'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js'}});document.head.append(map);
- window.QUEST={...(window.THE_GIOI?.[BAI.ma]||{}),theme:'research',dung_sau_chang:false,trang_doc:new URL('lesson.html',originBase).href};document.body.innerHTML='<div id="quest"></div>';
+ window.QUEST={...(window.THE_GIOI?.[BAI.ma]||{}),theme:window.STANDALONE?.theme||'research',dung_sau_chang:false,trang_doc:new URL('lesson.html',originBase).href};document.body.innerHTML='<div id="quest"></div>';
  const fallback=setTimeout(()=>{if(!document.querySelector('#quest canvas')){const u=new URL('lesson.html',originBase);u.search=location.search;u.searchParams.set('mode','read');location.replace(u.href)}},15000);
  const module=document.createElement('script');module.type='module';module.src=asset('ml/assets/quest3d.js');document.head.append(module);
  addEventListener('storage',e=>{if(e.key!==key&&(e.key?.includes(p.enrollment_id)||e.key?.includes(p.lesson.lesson_id)))dispatchEvent(new StorageEvent('storage',{key}))});
@@ -39,14 +39,14 @@
  document.addEventListener('click',e=>{const a=e.target.closest('a');if(a?.href?.startsWith(QUEST.trang_doc)){e.preventDefault();const u=new URL(QUEST.trang_doc),q=new URLSearchParams(location.search);u.searchParams.set('class',q.get('class'));u.searchParams.set('lesson',q.get('lesson'));u.searchParams.set('profile',q.get('profile'));u.searchParams.set('mode','read');u.searchParams.set('personal',q.get('personal')||'0');if(C.guest)u.searchParams.set('guest','1');location.href=u.href}});
  return;
  }else{
- document.body.innerHTML='<div id="app"></div>';await script('ml/assets/tuong_tac.js');await script('ml/assets/app.js');
+ document.body.innerHTML='<div id="app"></div>';await script('ml/assets/tuong_tac.js');await script('ml/assets/tuong_tac_dl.js');await script('ml/assets/app.js');
  }
  }else if(kind==='activity'){await script('activity.js');ActivityLesson(C,p);}
 
  const focus=document.createElement('button');focus.className='focus-nav-toggle';focus.textContent='☷ Mục lục';focus.onclick=()=>document.body.classList.toggle('focus-hide-nav');document.body.append(focus);
  document.querySelectorAll('#studyMode,[data-action="study-mode"]').forEach(b=>b.hidden=true);
  if(p.read_only){const banner=document.createElement('p');banner.textContent='Lớp đã lưu trữ · Em có thể xem lại bài học và tải bản sao.';banner.style='background:#edf2f4;padding:16px';document.body.prepend(banner);const observer=new MutationObserver(()=>document.querySelectorAll('input,textarea,select,form button').forEach(x=>{x.disabled=true}));observer.observe(document.body,{childList:true,subtree:true});document.querySelectorAll('input,textarea,select,form button').forEach(x=>x.disabled=true)}
- if(p.payload.notebook){const box=document.createElement('aside');box.style='padding:14px 24px;background:#eaf5ef;color:#14524b;display:flex;gap:15px;align-items:center;flex-wrap:wrap';const text=document.createElement('span');text.textContent='Notebook học sinh · tải xuống rồi mở trong Google Colab';const b=document.createElement('button');b.textContent='Tải notebook';b.onclick=()=>{const n=p.payload.notebook,u=URL.createObjectURL(new Blob([JSON.stringify(n.data,null,2)],{type:'application/x-ipynb+json'})),a=document.createElement('a');a.href=u;a.download=n.name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)};box.append(text,b);document.body.prepend(box)}
+ if(p.payload.notebook){const box=document.createElement('aside');box.style='padding:14px 24px;background:#eaf5ef;color:#14524b;display:flex;gap:15px;align-items:center;flex-wrap:wrap';const text=document.createElement('span');text.textContent='Notebook học sinh · tải xuống rồi mở trong Google Colab';const b=document.createElement('button');b.textContent='Tải notebook';b.onclick=()=>{const n=p.payload.notebook,u=URL.createObjectURL(new Blob([JSON.stringify(n.data,null,2)],{type:'application/x-ipynb+json'})),a=document.createElement('a');a.href=u;a.download=n.name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)};box.append(text,b);const lab=window.STANDALONE?.ui==='lab',labMain=lab&&document.querySelector('#app>main');if(lab){box.className='lab-notebook';document.documentElement.dataset.ui='lab';document.documentElement.dataset.course=STANDALONE.course;if(!document.querySelector('link[href*="lab-lesson.css"]'))css('ml/assets/lab-lesson.css')}if(labMain)labMain.before(box);else document.body.prepend(box)}
  await script('missing-tasks.js');await script('learning.js');LessonLearning(C);await script('certificate.js');LessonCertificate(C);await C.flush();
  }catch(e){console.error('Lesson startup',e);const msg='Chưa mở được bài học. Thử tải lại hoặc chọn chế độ Bài học.';document.body.innerHTML='<main style="padding:24px;font-family:system-ui"><p role="alert"></p></main>';document.querySelector('p').textContent=msg;parent.postMessage({type:'portal-status',status:msg,pending:false},location.origin)}
 })();

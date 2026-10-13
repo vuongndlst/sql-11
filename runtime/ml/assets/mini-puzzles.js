@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import {spatialNeighbor} from './focus-navigation.js?v=4753a04700cc';
+import {spatialNeighbor} from './focus-navigation.js?v=648cbdfc9300';
 export const gameTypes=['maze','flight','jump','memory','slide','bowling'];
 export function selectGame(theme,seed){const offset={workshop:0,space:1,archive:3,research:2}[theme]||0;return gameTypes[((Math.floor(seed/10)-1)*2+seed%10+offset+600)%6];}
 export function setupPuzzle({type,seed,scene,camera,canvas,mesh,box,mat,control,status,active,win,tone,textures}){

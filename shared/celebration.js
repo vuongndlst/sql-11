@@ -9,7 +9,7 @@ window.LessonCelebration=(()=>{'use strict';
  const reduced=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
  const valid=()=>!disposed&&C?.allowed()&&uid()===C.profile.id;
  async function jsonAsset(name){const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),3000);try{const response=await fetch(asset(name),{signal:controller.signal});if(!response.ok)throw Error('celebration_asset');return await response.json();}finally{clearTimeout(timer);}}
- const captions={T01:['Con thắng Boss rồi mà cái nút vẫn còn muốn nổi tiếng!','Nó qua đó rồi! Chắc sợ con bấm nhẹ quá.','Rồi, hết nhây! Đưa chứng chỉ đây cho con!'],T02:['Đóng nhẹ thôi! Chứng chỉ chứ có phải bánh tráng đâu!','Ủa, dấu này to hơn cái mặt Boss luôn rồi!','Robot hơi nhiệt tình. Đóng một cái mà thầy giật mình ké!','Rồi rồi, thầy biết con giỏi. Không cần đóng dấu bự vậy!'],T03:['Ủa, ai mời Boss vô hình vậy?','Thua rồi mà vẫn ráng đứng giữa. Boss cũng biết làm màu ghê!','Né chút Boss ơi! Hôm nay người được khen là con!','Boss xin đứng ké. Thôi, cho nó vui chút cũng được!'],T04:['Ủa, tiết kiệm tới mức còn đúng một miếng hả?','Một miếng giấy mà rơi chậm dữ! Nó muốn được chú ý đó.','Pháo giấy hơi ít. Thầy vỗ tay phụ nha!','Rồi, bắn thêm đi! Người ta vừa thắng Boss mà!'],T05:['Cúp hơi bé. Lời khen của thầy thì không nha!','Ủa, cúp này để trên bàn hay để trong túi áo?','Cầm nhẹ thôi! Nhỏ vậy thầy sợ con làm rớt mất.','Khoan, phóng to lên chút! Con thắng cả Boss đó nha!'],T06:['Mở quà mà hồi hộp hơn đánh Boss luôn!','Dán kín dữ vậy! Ai gói mà có tâm quá trời?','Con qua Boss rồi. Cái phong bì đừng bày đặt khó nữa nha!','Mở ra coi! Chứng chỉ chờ lâu chắc cũng nóng rồi!'],T07:['Mở ra đi! Người thắng đang đứng chờ nè!','Rèm mở chút xíu. Chắc định cho con hóng thêm một nhịp.','Boss ló ra chào cái rồi đi. Hôm nay biết điều ghê!','Rồi, tới lượt con! Rèm ơi, đừng giành spotlight nữa!']};
+ const captions={"T01": ["Cái nút đang làm giá. Bấm nữa đi, nó sắp chịu thua!", "Nó chạy nữa kìa! Chắc tưởng con không đủ kiên nhẫn.", "Rồi rồi, nó chịu rồi. Chứng chỉ của con đây!"], "T02": ["Robot đóng dấu mạnh tay quá, cái bàn cũng giật mình.", "Dấu to cỡ này thì ai giả mạo nổi.", "Robot vui quá đóng luôn ba cái. Kệ, càng chắc!", "Đóng nhẹ thôi robot ơi, chứng chỉ chứ đâu phải giấy gói xôi!"], "T03": ["Ủa, con bọ nào chen vô ảnh vậy?", "Con bọ thua rồi mà vẫn muốn chụp chung cho nổi.", "Tránh ra bọ ơi, hôm nay nhân vật chính là con!", "Con bọ xin đứng ké một tấm. Cho nó vui chút cũng được."], "T04": ["Pháo giấy tiết kiệm quá, rơi đúng một miếng!", "Miếng giấy rơi chậm cỡ này chắc muốn lên hình.", "Hết ngân sách pháo giấy rồi, thầy vỗ tay bù nha!", "Bắn thêm đi! Người ta vừa xong cả bài mà!"], "T05": ["Cúp gì bé xíu vậy? Từ từ, nó đang lớn.", "Cúp này bỏ vô hộp bút cũng vừa.", "Ơ kìa, nó lớn rồi! Xứng với con hơn hẳn.", "Cúp to rồi đó, cầm cẩn thận kẻo rớt trúng chân."], "T06": ["Mở phong bì mà hồi hộp như mở kết quả thi.", "Ai dán kín dữ vậy trời? Chắc sợ chứng chỉ bay mất.", "Bấm vào để mở nha, phong bì hơi làm giá.", "Mở ra coi! Chứng chỉ chờ con nãy giờ rồi."], "T07": ["Kéo rèm lên! Người chiến thắng sắp xuất hiện.", "Rèm mở chậm chậm cho con hồi hộp thêm chút.", "Bấm vào để kéo rèm nha, sân khấu là của con.", "Rèm ơi nhanh lên, đừng giành ánh đèn của con!"]};
  function scoreOf(before,after){
   let score=null;
   if(P.payload.kind==='ml'&&!before.finalPassed&&after.finalPassed)score={correct:after.diem,total:P.payload.data.cuoi.so_cau};
@@ -22,6 +22,7 @@ window.LessonCelebration=(()=>{'use strict';
   const pool=memes.filter(m=>m.approved&&reaction.includes(m.reaction)&&m.id!==h.lastGif);
   const meme=draw(pool)||draw(memes.filter(m=>m.approved));
   let text=line?.text||(event.kind==='boss'?'Con qua rồi! Được ghê!':'Hay nha! Qua chặng rồi!');
+  if(course!=='cpp')text=text.replace(/Boss(?: (?:Python|SQL|ML|C\+\+))?/g,'Thử thách cuối'); // 12/10/2026: chỉ C++ còn gọi Boss
   text=text.replaceAll('{correct}',event.score?.correct??'').replaceAll('{total}',event.score?.total??'');
   return {text,line:line?.id,meme:meme?.id};
  }
@@ -51,7 +52,7 @@ window.LessonCelebration=(()=>{'use strict';
   q('.celebration-close').onclick=()=>{pendingBoss=false;close();};dialog.addEventListener('cancel',e=>{e.preventDefault();pendingBoss=false;close();});
   if(event.mode!=='normal'){
    const image=new Image();image.alt='Hoạt cảnh vui: '+event.mode;image.src=asset('ml/assets/celebrations/'+event.mode+(reduced()?'.png':'.webp'));image.onerror=()=>{media.innerHTML='<div class="celebration-mascot">🤖</div>';};media.replaceChildren(image);q('.celebration-quote').textContent=draw(captions[event.mode]);
-   later(()=>image.src=asset('ml/assets/celebrations/'+event.mode+'.png'),event.mode==='T01'?6000:3000);
+   
    if(event.mode==='T01'){
     primary.textContent='Nhận ngay';q('.celebration-arena').hidden=false;q('.celebration-hint').hidden=false;const chase=q('.celebration-arena button');let count=0;
     chase.onclick=e=>{count++;if(count>=3){certificate();return;}q('.celebration-quote').textContent=captions.T01[count];if(!reduced()&&e.detail!==0){chase.style.left=count===1?'36%':'9%';chase.style.top=count===1?'58%':'12%';}chase.textContent=count===2?'Nhận chứng chỉ':'Ở đây nè!';chase.focus();};
@@ -59,7 +60,7 @@ window.LessonCelebration=(()=>{'use strict';
    }
    if(['T06','T07'].includes(event.mode))media.onclick=()=>{image.src=asset('ml/assets/celebrations/'+event.mode+'.png');media.onclick=null;};
   }else if(!reduced()){
-   const gif=memes.find(m=>m.id===event.meme);if(gif){const frame=document.createElement('iframe');frame.title=gif.title;frame.src=gif.embed;frame.tabIndex=-1;frame.referrerPolicy='strict-origin-when-cross-origin';frame.allow='';frame.loading='eager';media.append(frame);q('.celebration-source').innerHTML='<a href="'+esc(gif.source)+'" target="_blank" rel="noopener noreferrer">via GIPHY · '+esc(gif.creator||'GIPHY')+'</a>';later(()=>frame.remove(),5000);}
+   const gif=memes.find(m=>m.id===event.meme);if(gif){const frame=document.createElement('iframe');frame.title=gif.title;frame.src=gif.embed;frame.tabIndex=-1;frame.referrerPolicy='strict-origin-when-cross-origin';frame.allow='';frame.loading='eager';media.append(frame);q('.celebration-source').innerHTML='<a href="'+esc(gif.source)+'" target="_blank" rel="noopener noreferrer">via GIPHY · '+esc(gif.creator||'GIPHY')+'</a>';}
   }
   document.body.append(dialog);try{dialog.showModal();primary.focus();}catch{dialog.remove();active=null;pendingBoss=false;}
  }

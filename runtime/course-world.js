@@ -5,7 +5,7 @@ window.CourseWorld=async(p,C,originBase)=>{
  let steps;
  if(kind==='sql')steps=[...p.payload.lesson.stages.map(x=>({title:x.title})),{title:'Phòng thực hành SQL'}];
  else {await script(kind+'/engine/kit.js');const source=document.createElement('script');source.textContent=p.payload.source;document.head.append(source);source.remove();steps=LESSON.steps.filter(x=>x.kind!=='gate'&&x.kind!=='boss'&&x.kind!=='extra');}
- const world={sql:{theme:'archive',ten_dao:'Thành phố dữ liệu',kieu:'network',mau:'#65DCC4',bieu_tuong:'SQL',ky_hieu:['SELECT','PK','FK','JOIN']},python:{theme:'space',ten_dao:'Trạm không gian Python',kieu:'code',mau:'#8BC7FF',bieu_tuong:'Py',ky_hieu:['print()','if','for','list']},cpp:{theme:'workshop',ten_dao:'Xưởng robot C++',kieu:'factory',mau:'#FFB56B',bieu_tuong:'C++',ky_hieu:['cout','cin','int','for']}}[kind];
+ const world={sql:{theme:'archive',ten_dao:'Đảo SQL',kieu:'network',mau:'#65DCC4',bieu_tuong:'SQL',ky_hieu:['SELECT','PK','FK','JOIN']},python:{theme:'space',ten_dao:'Đảo Python',kieu:'code',mau:'#8BC7FF',bieu_tuong:'Py',ky_hieu:['print()','if','for','list']},cpp:{theme:'workshop',ten_dao:'Đảo C++',kieu:'factory',mau:'#FFB56B',bieu_tuong:'C++',ky_hieu:['cout','cin','int','for']}}[kind];
  window.PORTAL_WORLD_STEPS=steps;
  window.BAI={ma:p.lesson.lesson_key,tien_to_luu:'lsts-world-',bai:p.lesson.position,khoa:p.course_id,nhan:world.bieu_tuong,tieu_de:p.lesson.title,cau_hoi:'Hoàn thành lần lượt các trạm để mở chặng tiếp theo.',chang:steps.map(s=>({ten:s.title||s.name||s.label||s.id,phut:5,muc_tieu:[],khoi_dong:''})),cuoi:{so_cau:kind==='sql'?6:(LESSON.steps.find(s=>s.kind==='boss')?.challenges?.length||3),dat:kind==='sql'?5:3}};
  const key=BAI.tien_to_luu+BAI.ma,originalGet=Storage.prototype.getItem;

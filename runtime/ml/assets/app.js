@@ -206,7 +206,9 @@
       bang.appendChild(body);
       chiTiet.appendChild(el("div", { class: "du-lieu-cuon" }, [bang]));
       var giai = d.cot.map(function (c, j) { return d.giai_thich[j] ? c + ": " + d.giai_thich[j] : ""; }).filter(Boolean);
-      if (giai.length) chiTiet.appendChild(el("p", { class: "du-lieu-chu-giai", text: giai.join(" · ") }));
+      if (giai.length) chiTiet.appendChild(el("ul", { class: "du-lieu-chu-giai" }, giai.map(function (g) {   // mỗi cột một dòng
+        var i = g.indexOf(": "); return el("li", {}, [el("code", { text: g.slice(0, i) }), document.createTextNode(": " + g.slice(i + 2))]);
+      })));
       khoi.appendChild(chiTiet);
       khung.appendChild(khoi);
     });
@@ -340,6 +342,15 @@
           var ten = l.url ? '<a href="' + l.url + '" target="_blank" rel="noopener">' + l.ten + "</a>" : "<b>" + l.ten + "</b>";
           return el("li", { html: ten + (l.ghi_chu ? " — " + l.ghi_chu : "") });
         }))]);
+      case "quy_trinh": return veQuyTrinh(k);
+      case "code_kq": return veCodeKq(k);
+      case "tu_lam": return el("div", { class: "tu-lam" }, [
+        el("div", { class: "tl-tieu-de", html: "Tự làm trong notebook" + (k.o ? " · ô " + k.o : "") + ": " + k.tieu_de }),
+        el("p", { html: k.yeu_cau }),
+        k.goi_y ? el("details", {}, [el("summary", { text: "Gợi ý" }), el("p", { html: k.goi_y })]) : null,
+        k.kiem ? el("details", {}, [el("summary", { text: "Kết quả đúng để tự kiểm tra" }),
+          k.kiem_bang ? el("div", { class: "ck-bang" }, [veBang(k.kiem_bang.cot, k.kiem_bang.dong)]) : el("pre", { class: "ck-text", text: k.kiem }),
+          k.giai ? el("p", { html: k.giai }) : null]) : null]);
       case "demo_tb_tv": return demoTbTv(k);
       case "demo_truot": return demoTruot(k);
       case "demo_khoang_cach": return demoKhoangCach(k);
@@ -351,6 +362,82 @@
     if (window.ML1_TT && window.ML1_TT[k.t]) { window.ML1_TT.init(el); return window.ML1_TT[k.t](k); }
     return el("p", { text: "[khối chưa hỗ trợ: " + k.t + "]" });
   }
+  // 12/10/2026 — bản đồ quy trình (EDA…) và khối "Code → Kết quả → Đọc kết quả".
+  // Code mẫu KHÔNG cho copy: học sinh đọc trên web rồi tự gõ lại vào notebook.
+  function veQuyTrinh(k) {
+    var o = el("div", { class: "quy-trinh" }, [k.tieu_de ? el("div", { class: "tieu-de-hop", text: k.tieu_de }) : null]);
+    var hang = el("ol", { class: "qt-buoc" });
+    k.buoc.forEach(function (b, i) {
+      var dang = (k.hien_tai || []).indexOf(i + 1) >= 0;
+      hang.appendChild(el("li", { class: dang ? "dang" : "" }, [
+        el("span", { class: "qt-so", text: String(i + 1) }), el("b", { html: b.ten }),
+        b.y ? el("span", { class: "qt-y", html: b.y }) : null,
+        b.lenh ? el("code", { class: "qt-lenh", html: b.lenh }) : null]));
+    });
+    o.appendChild(hang);
+    if (k.ghi_chu) o.appendChild(el("p", { class: "qt-ghi-chu", html: k.ghi_chu }));
+    return o;
+  }
+  function toMauPy(dong) {
+    var h = dong.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    var cmt = "", i = -1, q = null;
+    for (var j = 0; j < h.length; j++) { var c = h[j]; if (q) { if (c === q) q = null; } else if (c === "'" || c === '"') q = c; else if (c === "#") { i = j; break; } }
+    if (i >= 0) { cmt = '<span class="py-cmt">' + h.slice(i) + "</span>"; h = h.slice(0, i); }
+    h = h.replace(/("[^"]*"|'[^']*')/g, '<span class="py-str">$1</span>')
+         .replace(/\b(import|from|as|for|in|if|else|elif|def|return|True|False|None|and|or|not)\b/g, '<span class="py-kw">$1</span>');
+    return h + cmt;
+  }
+  function veCodeKq(k) {
+    var o = el("div", { class: "code-kq" });
+    if (k.tieu_de) o.appendChild(el("div", { class: "ck-tieu-de", html: k.tieu_de }));
+    if (k.muc_dich) o.appendChild(el("p", { class: "ck-muc-dich", html: k.muc_dich }));
+    var ma = el("div", { class: "ck-ma khong-chep", "aria-label": "Code mẫu" });
+    ma.appendChild(el("div", { class: "ck-nhan", html: "CODE · đọc rồi <b>tự gõ</b> vào notebook" + (k.o ? " · ô " + k.o : "") }));
+    var pre = el("pre", {});
+    k.code.split("\n").forEach(function (d, n) {
+      pre.appendChild(el("span", { class: "ck-dong" }, [el("i", { text: String(n + 1) }), el("span", { html: toMauPy(d) || " " })]));
+    });
+    ma.appendChild(pre);
+    o.appendChild(ma);
+    o.appendChild(el("div", { class: "ck-lam-ngay", html: "<b>Làm ngay:</b> gõ " + (k.o ? "ô " + k.o : "ô này") +
+      " vào notebook, bấm chạy, rồi so với kết quả bên dưới." }));
+    var kq = k.ket_qua || {};
+    var ra = el("div", { class: "ck-ra" }, [el("div", { class: "ck-nhan", text: "KẾT QUẢ (chạy thật trên dữ liệu)" })]);
+    if (kq.text) ra.appendChild(el("pre", { class: "ck-text", text: kq.text }));
+    if (kq.bang) { var bw = el("div", { class: "ck-bang" }); bw.appendChild(veBang(kq.bang.cot, kq.bang.dong, kq.bang.nhan_manh)); ra.appendChild(bw); }
+    if (kq.anh) ra.appendChild(el("figure", { class: "hinh ck-anh" }, [anhCoDuPhong(kq.anh, null, { alt: kq.alt || "Kết quả" }),
+      kq.cap ? el("figcaption", { html: kq.cap }) : null]));
+    o.appendChild(ra);
+    if (k.doc && k.doc.length) {
+      o.appendChild(el("div", { class: "ck-doc" }, [el("div", { class: "ck-nhan", text: "ĐỌC KẾT QUẢ" }),
+        el("ul", { class: "ds" }, k.doc.map(function (m) { return el("li", { html: m }); }))]));
+    }
+    if (k.lenh && k.lenh.length) {
+      o.appendChild(el("details", { class: "ck-lenh" }, [el("summary", { text: "Lệnh trong ô này" }),
+        el("ul", { class: "ds" }, k.lenh.map(function (m) {
+          return el("li", { html: "<code>" + m[0] + "</code> — " + m[1] + (m[2] ? ' · <a href="' + m[2] + '" target="_blank" rel="noopener">tài liệu</a>' : "") });
+        }))]));
+    }
+    return o;
+  }
+  (function chanChep() {
+    function trong(n) { while (n) { if (n.classList && n.classList.contains("khong-chep")) return true; n = n.parentNode; } return false; }
+    function bao() {
+      var t = document.getElementById("ck-thong-bao");
+      if (!t) { t = document.createElement("div"); t.id = "ck-thong-bao"; t.setAttribute("role", "status"); document.body.appendChild(t); }
+      t.textContent = "Code mẫu không copy được. Con gõ lại vào notebook để nhớ lệnh nhé.";
+      t.className = "hien"; clearTimeout(t._h); t._h = setTimeout(function () { t.className = ""; }, 2600);
+    }
+    ["copy", "cut"].forEach(function (ev) {
+      document.addEventListener(ev, function (e) {
+        var s = window.getSelection && window.getSelection();
+        if (s && s.rangeCount && (trong(s.anchorNode) || trong(s.focusNode))) { e.preventDefault(); bao(); }
+      });
+    });
+    ["contextmenu", "dragstart"].forEach(function (ev) {
+      document.addEventListener(ev, function (e) { if (trong(e.target)) { e.preventDefault(); if (ev === "contextmenu") bao(); } });
+    });
+  })();
   function veBang(cot, dong, nhan_manh) {
     var tb = el("table", { class: "bang" });
     tb.appendChild(el("tr", {}, cot.map(function (c) { return el("th", { html: c }); })));
@@ -634,6 +721,8 @@
     var o = el("div", { class: "cau", "data-id": q.id });
     o.appendChild(el("div", { class: "de" }, [el("span", { class: "so-cau", text: "Câu " + stt + "." }),
       el("span", { html: q.q }), el("span", { class: "loai", text: TEN_LOAI[q.k] })]));
+    if (q.ngu_canh) o.appendChild(el("div", { class: "ngu-canh", html: q.ngu_canh }));   // ngữ cảnh để câu hỏi tự đủ dữ kiện
+    if (q.bang) { var bq = el("div", { class: "cau-bang" }); bq.appendChild(veBang(q.bang.cot, q.bang.dong)); o.appendChild(bq); }
     if (q.img) o.appendChild(anhCoDuPhong(q.img.src, q.img.du_phong, { class: "hinh-cau", alt: "Hình của câu hỏi" }));
     var cu = luuTL ? TT.tl[q.id] : null;
     var ten = "c" + Math.random().toString(36).slice(2);
@@ -757,7 +846,7 @@
     t.appendChild(el("span", { class: "nhan", text: "Chặng " + (i + 1) + " / " + B.chang.length + " · khoảng " + c.phut + " phút" }));
     t.appendChild(el("h2", { text: c.ten }));
     if (i === B.chang.length - 1 && TT.dat && TT.diem) {
-      t.appendChild(el("p", { text: "Em đã đạt checkpoint cuối. Có thể tải lại chứng chỉ tại đây." }));
+      t.appendChild(el("p", { text: "Con đã đạt checkpoint cuối. Có thể tải lại chứng chỉ tại đây." }));
       var chungChiChang = el("div", { class: "chung-chi" });
       t.appendChild(chungChiChang);
       veChungChi(TT.diem, TT.ngay_dat || ngayNay(), chungChiChang, true);

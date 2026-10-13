@@ -10,22 +10,39 @@
  * Âm thanh tự tạo bằng Web Audio (không tải file nhạc). Máy yếu: tự chuyển chế độ nhẹ.
  */
 import * as THREE from "three";
-import {upgradeActor,addLandmark} from "./blender-art.js?v=4753a04700cc";
-import {stationGame} from './quest-games.js?v=4753a04700cc';
-import {assignStation,startStation,finishStation} from './arcade-selection.js?v=4753a04700cc';
+import {upgradeActor,addLandmark} from "./blender-art.js?v=648cbdfc9300";
+import {stationGame} from './quest-games.js?v=648cbdfc9300';
+import {assignStation,startStation,finishStation} from './arcade-selection.js?v=648cbdfc9300';
+import {levelFor} from './arcade-rules.js?v=648cbdfc9300';
+// Cấp game của một trạm (13/10/2026): bài sau, chặng sau khó hơn; tính theo vị trí bài trong cả khoá.
+function capTram(i){try{const C=window.PortalCloud,ds=window.STANDALONE?.lessons||[],key=C?.packet?.lesson?.lesson_key,me=ds.find(x=>x.key===key),pos=Number(me?.position??C?.packet?.lesson?.position)||1,max=Math.max(pos,...ds.map(x=>Number(x.position)||0));return levelFor(pos,max,i,B.chang.length);}catch{return 3;}}
 
 const B = window.BAI;
 const CFG = Object.assign({ ten: "Thế giới " + B.tieu_de, trang_doc: "index.html",
   mau: "#38BDF8", mau_phu: "#A78BFA", bieu_tuong: "AI", ky_hieu: ["AI", "ML", "∑", "∇"],
   dung_sau_chang: true }, window.QUEST || {});
 CFG.ten_dao = CFG.ten_dao || CFG.ten;
+// A read link needs the same lesson and learner context as the island.
+function trangDocURL() {
+  const u = new URL(CFG.trang_doc, location.href);
+  for (const [key, value] of new URLSearchParams(location.search)) u.searchParams.set(key, value);
+  u.searchParams.set('mode', 'read');
+  return u.href;
+}
+function moCheDoDoc(event) {
+  if (!window.PortalCloud || parent === window) return;
+  event.preventDefault();
+  parent.postMessage({type:'portal-switch-read'}, location.origin);
+}
+
 // Course identity changes geometry as well as colour; lesson seeds vary its details.
 const THEME = CFG.theme || 'research';
 const STYLE = {
-  workshop: {sky:['#242039','#805B65','#D6A078'],ground:'#342E40',floor:'#54465A',segments:8,station:4,name:'Xưởng robot C++'},
-  space: {sky:['#060B23','#19235B','#495791'],ground:'#11192E',floor:'#273651',segments:48,station:24,name:'Trạm không gian Python'},
-  archive: {sky:['#092B36','#286C77','#85B8A5'],ground:'#16363C',floor:'#39676A',segments:4,station:4,name:'Thành phố dữ liệu'},
-  research: {sky:['#163838','#428B87','#A6CBB9'],ground:'#234A43',floor:'#47746B',segments:12,station:6,name:'Khu nghiên cứu ML'}
+  workshop: {sky:['#242039','#805B65','#D6A078'],ground:'#342E40',floor:'#54465A',segments:8,station:4,name:'Đảo C++'},
+  space: {sky:['#060B23','#19235B','#495791'],ground:'#11192E',floor:'#273651',segments:48,station:24,name:'Đảo Python'},
+  archive: {sky:['#092B36','#286C77','#85B8A5'],ground:'#16363C',floor:'#39676A',segments:4,station:4,name:'Đảo SQL'},
+  research: {sky:['#163838','#428B87','#A6CBB9'],ground:'#234A43',floor:'#47746B',segments:12,station:6,name:'Đảo Machine Learning'},
+  neural: {sky:['#0B0A2A','#3A1F7A','#8E7CD8'],ground:'#1B1846',floor:'#33307A',segments:16,station:8,name:'Đảo Deep Learning'}
 }[THEME] || null;
 document.documentElement.dataset.worldTheme = THEME;
 const TIEN_TO = B.tien_to_luu || "ml1_";
@@ -74,8 +91,8 @@ try {
 } catch (e) {
   document.body.appendChild(h("div", { class: "q-loi" }, [h("div", { class: "q-the", style: "padding:24px;max-width:480px" }, [
     h("h2", { text: "Máy này chưa chạy được đồ hoạ 3D" }),
-    h("p", { text: "Em vẫn học đủ các chặng ở trang bài học dạng đọc; tiến độ và chứng chỉ được dùng chung." }),
-    h("a", { class: "q-vao", href: CFG.trang_doc, style: "display:inline-grid;place-items:center;text-decoration:none", text: "Mở trang bài học" })])]));
+    h("p", { text: "Con vẫn học đủ các chặng ở trang bài học dạng đọc; tiến độ và chứng chỉ được dùng chung." }),
+    h("a", { class: "q-vao", href: trangDocURL(), onclick: moCheDoDoc, style: "display:inline-grid;place-items:center;text-decoration:none", text: "Mở trang bài học" })])]));
   throw e;
 }
 window.__questOK = true;
@@ -246,7 +263,7 @@ function canhChuDe() {
     for(let k=0;k<4;k++){const h=5+(k%2)*2;const tower=new THREE.Mesh(new THREE.BoxGeometry(3,h,3),vl("#31516A"));tower.position.set(-7+k*4.5,h/2,-34);g.add(tower);const cap=new THREE.Mesh(new THREE.BoxGeometry(3.3,.22,3.3),k%2?light:pale);cap.position.set(-7+k*4.5,h+.2,-34);g.add(cap);}
   }
 }
-if(THEME==='research')canhChuDe();
+if(THEME==='research'||THEME==='neural')canhChuDe();
 
 // Distinct landmarks outside the walking route; no extra mandatory tasks.
 const LANDMARKS = [];
@@ -279,6 +296,15 @@ function courseLandmarks(){
    addShape(part,new THREE.CylinderGeometry(.4,.5,3,8),dark,-2,3,1.5);
    const arm=addShape(part,new THREE.BoxGeometry(2.7,.5,.6),bright,-.9,4.6,1.5);arm.rotation.z=-.3;
    LANDMARKS.push('gear-and-robot-arm');
+  }else if(THEME==='neural'){
+   // Three-layer neuron tower: glowing nodes, weighted links between layers.
+   const glow=vl(CFG.mau_phu,{emissive:CFG.mau_phu,emissiveIntensity:.55}),pts=[],layers=[3,4,2];
+   addShape(part,new THREE.CylinderGeometry(3.4,3.7,.5,8),dark,0,.25,0);
+   const pos=layers.map((n,l)=>Array.from({length:n},(_,k)=>new THREE.Vector3((l-1)*2.6,1.8+k*1.5+(4-n)*.75,0)));
+   pos.forEach((col,l)=>col.forEach(v=>addShape(part,new THREE.SphereGeometry(.45,14,10),l===1?glow:bright,v.x,v.y,v.z)));
+   for(let l=0;l<2;l++)for(const a of pos[l])for(const b of pos[l+1])pts.push(a,b);
+   part.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(pts),new THREE.LineBasicMaterial({color:CFG.mau,transparent:true,opacity:.55})));
+   LANDMARKS.push('neuron-tower');
   }else{
    // Laboratory greenhouse and connected feature points.
    addShape(part,new THREE.CylinderGeometry(3,3.3,.5,12),white,0,.25,0);
@@ -478,7 +504,7 @@ const TUONG = (() => {
 // ------------------------------------------------------------------ cột dữ liệu và mô-đun công nghệ trong quảng trường
 (() => {
   const vi = [];
-  for (let k = 0; k < 400 && vi.length < (CAM_UNG?12:THEME==='research'?26:20); k++) {
+  for (let k = 0; k < 400 && vi.length < (CAM_UNG?12:(THEME==='research'||THEME==='neural')?26:20); k++) {
     const a = rnd() * Math.PI * 2, r = 5.5 + rnd() * (R_DAO - 7.5);
     const x = Math.cos(a) * r, z = Math.sin(a) * r;
     if (Math.abs(r - 13.8) < 2.4) continue;
@@ -729,10 +755,10 @@ function docLaiTienDo(tuKhung) {
   capNhatTrangThai(doi);
   if (doi) veGoiY(gan);
   if (!doi || !tuKhung) return;
-  if (TT.dat && !cu.dat) { SFX.qua(); thongBao("Em đã đạt checkpoint cuối và nhận chứng chỉ.", "tot", 5000); }
+  if (TT.dat && !cu.dat) { SFX.qua(); thongBao("Con đã đạt checkpoint cuối và nhận chứng chỉ.", "tot", 5000); }
   else if (qua() > cu.qua) {
     SFX.qua();
-    thongBao(qua() >= N ? "Em đã qua cả " + N + " trạm — Cổng checkpoint cuối đã mở!" :
+    thongBao(qua() >= N ? "Con đã qua cả " + N + " trạm — Cổng checkpoint cuối đã mở!" :
       "Đã qua Chặng " + qua() + ". Con có thể chọn trạm tiếp theo hoặc ôn lại.", "tot", 4500);
   }
 }
@@ -798,8 +824,8 @@ function dungDeThaoLuan(chang) {
   dangChoi = false; PHIM.clear(); CAN.hoat = false;
   tamDungTieuDe.textContent = "Đã hoàn thành Chặng " + chang;
   tamDungNoiDung.textContent = "Dừng tại đây. Quay về slide để trao đổi với lớp và ghi bài. " +
-    (chang < N ? "Khi giáo viên cho phép, em mới đi tiếp tới Chặng " + (chang + 1) + "." :
-      "Khi giáo viên cho phép, em mới mở checkpoint cuối.");
+    (chang < N ? "Khi giáo viên cho phép, con mới đi tiếp tới Chặng " + (chang + 1) + "." :
+      "Khi giáo viên cho phép, con mới mở checkpoint cuối.");
   tamDung.classList.remove("an"); tamDungNut.focus();
 }
 window.addEventListener("message", (e) => {
@@ -834,7 +860,7 @@ async function vaoTram(t){
  const restore=()=>{miniOpen=false;if(AM.tong)AM.tong.gain.value=QS.am?.8:0;renderer.domElement.focus();};
  const C=window.PortalCloud;let assignment;try{assignment=await assignStation(C,t.i);}catch{restore();vaoBaiTram(t);return;}if(!assignment||assignment.status!=='assigned'){restore();vaoBaiTram(t);return;}
  const sound=window.LocalLearning?.read('arcade-sound:'+C.profile.id,QS.am);
- stationGame({theme:THEME,seed:assignment.seed,gameType:assignment.type,seconds:assignment.seconds,title:B.chang[t.i].ten,sound,onStart:()=>startStation(C,t.i),onFinish:reason=>finishStation(C,t.i,reason),onEnter:()=>{
+ stationGame({theme:THEME,seed:assignment.seed,gameType:assignment.type,seconds:assignment.seconds,level:capTram(t.i),title:B.chang[t.i].ten,sound,onStart:()=>startStation(C,t.i),onFinish:reason=>finishStation(C,t.i,reason),onEnter:()=>{
    const C=window.PortalCloud;if(C){const state=C.peek();state.stationGames={...state.stationGames,[t.i]:true};C.save(C.packet.lesson.lesson_key,state);}
    restore();vaoBaiTram(t);
  },onCancel:restore});
@@ -929,7 +955,7 @@ function veGoiY(t) {
     nho = TT.dat ? "ĐÃ NHẬN CHỨNG CHỈ" : vao_dc ? "CỔNG ĐÃ MỞ" : "CỔNG KHOÁ";
     lon = "Checkpoint cuối";
     mo = vao_dc ? B.cuoi.so_cau + " câu, đạt " + B.cuoi.dat + " câu nhận chứng chỉ. Làm lại không giới hạn, mỗi lần là đề mới." :
-      window.PORTAL_FREE_NAV?"Thử sức với checkpoint cuối bất kỳ lúc nào.":"Qua đủ " + N + " trạm để mở cổng. Em đã qua " + qua() + "/" + N + ".";
+      window.PORTAL_FREE_NAV?"Thử sức với checkpoint cuối bất kỳ lúc nào.":"Qua đủ " + N + " trạm để mở cổng. Con đã qua " + qua() + "/" + N + ".";
     nut = TT.dat ? "Xem chứng chỉ" : "Vào làm bài";
   } else {
     const c = B.chang[t.i];
@@ -1073,9 +1099,9 @@ manDau.appendChild(h("div", { class: "q-the" }, [
   h("div", { class: "q-nho", text: B.khoa + " · " + B.nhan }),
   h("h1", { text: CFG.ten_dao }),
   h("p", { class: "q-cau", text: B.cau_hoi }),
-  h("p", { text: ({workshop:'Khám phá xưởng robot, bánh răng và bàn lắp ráp.',space:'Khám phá bệ phóng, tên lửa và dàn pin của trạm không gian.',archive:'Khám phá các kho dữ liệu và đường kết nối giữa chúng.',research:'Khám phá nhà kính nghiên cứu và các cụm dữ liệu theo chủ đề bài học.'})[THEME] + ' Hoàn thành trạm trước để mở trạm tiếp theo; khi vào bài, thế giới tạm dừng.' }),
+  h("p", { text: ({workshop:'Khám phá xưởng robot, bánh răng và bàn lắp ráp.',space:'Khám phá bệ phóng, tên lửa và dàn pin của trạm không gian.',archive:'Khám phá các kho dữ liệu và đường kết nối giữa chúng.',research:'Khám phá nhà kính nghiên cứu và các cụm dữ liệu theo chủ đề bài học.',neural:'Khám phá phòng thí nghiệm nơ-ron: các tầng nơ-ron phát sáng và dòng tín hiệu theo chủ đề bài học.'})[THEME] + ' Hoàn thành trạm trước để mở trạm tiếp theo; khi vào bài, thế giới tạm dừng.' }),
   h("p", { class: "q-nho", text: CAM_UNG ? "Kéo để di chuyển hoặc chạm trạm để đi tới." : "Di chuyển: WASD/phím mũi tên · Vào trạm: E · Xoay nhìn: kéo chuột." }),
-  h("div", { class: "q-hang" }, [nutVao, h("a", { class: "q-lien-ket", href: CFG.trang_doc, text: "Học ở chế độ đọc" })]),
+  h("div", { class: "q-hang" }, [nutVao, h("a", { class: "q-lien-ket", href: trangDocURL(), onclick: moCheDoDoc, text: "Học ở chế độ đọc" })]),
 ]));
 document.body.appendChild(manDau);
 nutVao.addEventListener("click", () => {

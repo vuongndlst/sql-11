@@ -1,0 +1,79 @@
+/* Giao diện "lab" cho trang bài học 2D (11/10/2026). Bật khi STANDALONE.ui==='lab' (boot.js gắn html[data-ui=lab]).
+ * Chỉ đổi màu/khung; không đổi nội dung, ID hay thứ tự khối. Trang đọc luôn nền sáng để hình matplotlib dễ đọc. */
+html[data-ui=lab]{
+  --lab-a1:#0D9488;--lab-a2:#2563EB;--lab-a3:#F59E0B;--lab-hero1:#0B3B4A;--lab-hero2:#0E7C74;--lab-tint:#E3F4F1;--lab-tint2:#EAF1FD;
+  --lab-glow:rgba(13,148,136,.28);--lab-bg:#F3F7FB;
+  --xanh:#0E2A3B;--xanh-chinh:#0D9488;--xanh-tuoi:#14B8A6;--xanh-nhat:#CCEFEA;--xanh-rat-nhat:#EEF6F6;--teal:#0D9488;
+  --vien:#DCE6EE;--nen:var(--lab-bg);--r:20px;
+}
+html[data-ui=lab][data-course=dl-11]{
+  --lab-a1:#7C3AED;--lab-a2:#0891B2;--lab-a3:#DB2777;--lab-hero1:#1E1B4B;--lab-hero2:#5B21B6;--lab-tint:#EFE9FE;--lab-tint2:#E0F7FB;
+  --lab-glow:rgba(124,58,237,.28);--lab-bg:#F5F3FF;
+  --xanh:#1E1B4B;--xanh-chinh:#7C3AED;--xanh-tuoi:#8B5CF6;--xanh-nhat:#DDD6FE;--xanh-rat-nhat:#F3F0FF;--teal:#7C3AED;
+  --vien:#E4E0F5;
+}
+html[data-ui=lab] body{background:radial-gradient(1200px 500px at 50% -200px,var(--lab-tint),transparent 70%),var(--lab-bg)}
+
+/* đầu trang: nối liền thanh của trang ngoài, không lặp tiêu đề */
+html[data-ui=lab] .dau{background:linear-gradient(90deg,var(--lab-hero1),var(--lab-hero2));box-shadow:0 8px 24px rgba(14,42,59,.12)}
+html[data-ui=lab] .dau .ten-khoa{font-size:11.5px;letter-spacing:.08em;opacity:.8}
+html[data-ui=lab] .dau .ten-bai{font-size:18px;letter-spacing:-.01em}
+html[data-ui=lab] .dau button.nguoi{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.3)}
+html[data-ui=lab] .thanh-tien-do{height:6px;background:rgba(255,255,255,.14)}
+html[data-ui=lab] .thanh-tien-do>div{background:linear-gradient(90deg,var(--lab-a3),#FDE68A);box-shadow:0 0 12px var(--lab-a3)}
+
+/* hộp notebook: đặt trong cột nội dung (boot.js chuyển vị trí) */
+html[data-ui=lab] aside.lab-notebook{max-width:948px;margin:20px auto 0!important;padding:12px 16px!important;border-radius:16px;background:linear-gradient(135deg,var(--lab-tint),var(--lab-tint2))!important;color:var(--xanh)!important;border:1px solid var(--xanh-nhat);font-weight:600;font-size:14.5px}
+html[data-ui=lab] aside.lab-notebook::before{content:"";width:34px;height:34px;border-radius:10px;flex:none;background:var(--lab-a1) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M7 3h9l3 3v15H7z'/%3E%3Cpath d='M4 7v14M10 10h6M10 14h6M10 18h3'/%3E%3C/svg%3E") center/20px no-repeat}
+html[data-ui=lab] aside.lab-notebook button{margin-left:auto;font:inherit;font-weight:700;font-size:14px;border:0;border-radius:10px;padding:8px 16px;color:#fff;background:linear-gradient(135deg,var(--lab-a1),var(--lab-a2));cursor:pointer;box-shadow:0 4px 14px var(--lab-glow)}
+html[data-ui=lab] main{max-width:980px}
+
+/* thanh chặng: các viên tròn có số, chặng đang học nổi bật */
+html[data-ui=lab] .cac-chang{gap:8px;padding:6px;background:#fff;border:1px solid var(--vien);border-radius:999px;box-shadow:0 4px 18px rgba(14,42,59,.06);width:fit-content;max-width:100%}
+html[data-ui=lab] .cac-chang button{border:0;background:transparent;padding:8px 15px}
+html[data-ui=lab] .cac-chang button.dang{background:linear-gradient(135deg,var(--lab-a1),var(--lab-a2));color:#fff;box-shadow:0 4px 14px var(--lab-glow)}
+html[data-ui=lab] .cac-chang button.xong{background:var(--lab-tint);color:var(--xanh)}
+html[data-ui=lab] .cac-chang button.xong::before{content:"✓ ";color:var(--lab-a1)}
+
+/* thẻ chặng */
+html[data-ui=lab] .the{border:1px solid var(--vien);box-shadow:0 1px 2px rgba(14,42,59,.05),0 14px 36px rgba(14,42,59,.07);position:relative;overflow:hidden}
+html[data-ui=lab] .the::before{content:"";position:absolute;inset:0 0 auto;height:4px;background:linear-gradient(90deg,var(--lab-a1),var(--lab-a2),var(--lab-a3))}
+html[data-ui=lab] .the h2{letter-spacing:-.02em}
+html[data-ui=lab] .muc-tieu{border-left-color:var(--lab-a1);background:var(--lab-tint)}
+html[data-ui=lab] .cau-lon{background:linear-gradient(135deg,#FFF7E6,#FEF3C7);border:1px solid #FDE68A}
+html[data-ui=lab] .dinh-nghia{border:1.5px solid var(--xanh-nhat);background:linear-gradient(180deg,#fff,var(--xanh-rat-nhat));box-shadow:inset 4px 0 0 var(--lab-a1);border-radius:16px}
+html[data-ui=lab] .hop{border-radius:16px}
+html[data-ui=lab] .demo{border:1.5px solid var(--xanh-nhat);border-radius:18px;background:radial-gradient(var(--xanh-nhat) 1px,transparent 1.4px) 0 0/18px 18px,#fff}
+html[data-ui=lab] .demo .tieu-de-hop::before{content:"▶ ";color:var(--lab-a1)}
+html[data-ui=lab] table.bang{border-radius:12px;overflow:hidden}
+html[data-ui=lab] table.bang th{background:var(--lab-hero1)}
+html[data-ui=lab] .hinh img{border-radius:12px}
+
+/* câu hỏi và nút */
+html[data-ui=lab] .cau{border-radius:16px}
+html[data-ui=lab] .pa{border:1px solid var(--vien);margin:6px 0;background:#fff}
+html[data-ui=lab] .pa:hover{border-color:var(--lab-a1);background:var(--xanh-rat-nhat)}
+html[data-ui=lab] .nut{background:linear-gradient(135deg,var(--lab-a1),var(--lab-a2));border-radius:12px;box-shadow:0 6px 16px var(--lab-glow);transition:transform .15s}
+html[data-ui=lab] .nut:hover{background:linear-gradient(135deg,var(--lab-a1),var(--lab-a2));transform:translateY(-1px)}
+html[data-ui=lab] .nut:disabled{background:#A7B4C2;box-shadow:none;transform:none}
+html[data-ui=lab] .nut.phu{background:#fff;color:var(--xanh);border:1.5px solid var(--lab-a1);box-shadow:none}
+html[data-ui=lab] input[type=range]{accent-color:var(--lab-a1)}
+
+/* các khối học tập dưới bài: cùng bề rộng nội dung */
+html[data-ui=lab] .learning-panel,html[data-ui=lab] .learning-card{max-width:948px;border-radius:18px;border-color:var(--vien);box-shadow:0 6px 20px rgba(14,42,59,.05)}
+html[data-ui=lab] .learning-eyebrow{color:var(--lab-a1)}
+html[data-ui=lab] .learning-primary{background:linear-gradient(135deg,var(--lab-a1),var(--lab-a2))!important;border:0!important}
+/* trang thực hành (activity) */
+html[data-ui=lab] body>aside.lab-notebook{max-width:1052px;font-family:'Be Vietnam Pro',system-ui,sans-serif}
+html[data-ui=lab] .activity-page{background:#fff;border:1px solid var(--vien);border-radius:24px;margin:20px auto 40px;box-shadow:0 14px 36px rgba(14,42,59,.07);position:relative;overflow:hidden}
+html[data-ui=lab] .activity-page::before{content:"";position:absolute;inset:0 0 auto;height:5px;background:linear-gradient(90deg,var(--lab-a1),var(--lab-a2),var(--lab-a3))}
+html[data-ui=lab] .activity-page h1{letter-spacing:-.02em;color:var(--xanh)}
+html[data-ui=lab] .activity-page table th{background:var(--lab-tint)}
+html[data-ui=lab] .activity-page button:hover{border-color:var(--lab-a1)}
+html[data-ui=lab] .focus-nav-toggle{border-radius:999px;box-shadow:0 6px 18px rgba(14,42,59,.16)}
+@media (max-width:640px){
+  html[data-ui=lab] .cac-chang{border-radius:18px;width:auto}
+  html[data-ui=lab] aside.lab-notebook{margin:14px 12px 0!important}
+  html[data-ui=lab] aside.lab-notebook button{margin-left:0}
+}
+@media (prefers-reduced-motion:reduce){html[data-ui=lab] .nut{transition:none}}

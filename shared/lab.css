@@ -1,0 +1,149 @@
+/* Giao diện "lab" (11/10/2026) — trang vào, trang khoá, thanh bài học. Bật bằng html[data-ui=lab].
+ * Màu theo khoá: html[data-course=ml-level1] (Data Lab, sáng) · html[data-course=dl-11] (Deep Lab, tối). */
+html[data-ui=lab]{
+  --lab-bg:#F3F7FB;--lab-bg2:#E9F1F8;--lab-ink:#0E2A3B;--lab-muted:#52697E;--lab-card:#FFFFFF;--lab-line:#D9E3EC;
+  --lab-a1:#0D9488;--lab-a2:#2563EB;--lab-a3:#F59E0B;--lab-hero1:#0B3B4A;--lab-hero2:#0E7C74;--lab-glow:rgba(13,148,136,.35);
+  --lab-net:#7DD3C7;--lab-chip:#E3F4F1;--lab-chip-ink:#0B6B64;--lab-shadow:0 1px 2px rgba(14,42,59,.06),0 10px 30px rgba(14,42,59,.08);
+  --accent:var(--lab-a1);--wash:var(--lab-chip);
+}
+/* Python, SQL, C++ (12/10/2026): sáng như Data Lab, giữ màu nhận diện cũ của từng khoá. */
+html[data-ui=lab][data-course=python-10]{
+  --lab-a1:#1166A5;--lab-a2:#F59E0B;--lab-a3:#0D9488;--lab-hero1:#0B2E4F;--lab-hero2:#1166A5;--lab-glow:rgba(17,102,165,.32);
+  --lab-net:#93C5FD;--lab-chip:#EAF5FF;--lab-chip-ink:#0B4F82;
+}
+html[data-ui=lab][data-course=sql-11]{
+  --lab-a1:#087D78;--lab-a2:#2563EB;--lab-a3:#F59E0B;--lab-hero1:#0A3B39;--lab-hero2:#087D78;--lab-glow:rgba(8,125,120,.32);
+  --lab-net:#86D9C9;--lab-chip:#E7F6F0;--lab-chip-ink:#06605C;
+}
+html[data-ui=lab][data-course=cpp-8-v2]{
+  --lab-a1:#5640A5;--lab-a2:#F59E0B;--lab-a3:#EC4899;--lab-hero1:#241A4F;--lab-hero2:#5640A5;--lab-glow:rgba(86,64,165,.32);
+  --lab-net:#C4B5FD;--lab-chip:#F1EDFF;--lab-chip-ink:#43308A;
+}
+html[data-ui=lab][data-course=dl-11]{
+  --lab-bg:#0A0F1F;--lab-bg2:#0F1630;--lab-ink:#E8EBF8;--lab-muted:#A2ABCF;--lab-card:#121A35;--lab-line:#28335E;
+  --lab-a1:#8B5CF6;--lab-a2:#22D3EE;--lab-a3:#F472B6;--lab-hero1:#1E1B4B;--lab-hero2:#4C1D95;--lab-glow:rgba(139,92,246,.45);
+  --lab-net:#A78BFA;--lab-chip:#1E2450;--lab-chip-ink:#C4B5FD;--lab-shadow:0 1px 2px rgba(0,0,0,.4),0 14px 40px rgba(0,0,0,.45);
+  color-scheme:dark;
+}
+html[data-ui=lab],html[data-ui=lab] body{background:var(--lab-bg);color:var(--lab-ink)}
+html[data-ui=lab] p{color:var(--lab-muted)}
+html[data-ui=lab] h1,html[data-ui=lab] h2{color:var(--lab-ink)}
+html[data-ui=lab] .eyebrow{color:var(--lab-a1)}
+html[data-ui=lab][data-course=dl-11] .eyebrow{color:var(--lab-a2)}
+html[data-ui=lab] button,html[data-ui=lab] .button{background:var(--lab-card);color:var(--lab-ink);border-color:var(--lab-line);border-radius:12px;transition:transform .15s,box-shadow .15s,border-color .15s}
+html[data-ui=lab] button:hover,html[data-ui=lab] .button:hover{border-color:var(--lab-a1);box-shadow:0 0 0 3px var(--lab-glow)}
+html[data-ui=lab] .primary{background:linear-gradient(135deg,var(--lab-a1),var(--lab-a2));color:#fff;border:0;box-shadow:0 6px 18px var(--lab-glow)}
+html[data-ui=lab] .primary:hover{transform:translateY(-1px)}
+html[data-ui=lab] .field input,html[data-ui=lab] .field select,html[data-ui=lab] .course-filters input,html[data-ui=lab] .course-filters select{background:var(--lab-bg);color:var(--lab-ink);border-color:var(--lab-line);border-radius:10px}
+html[data-ui=lab] .field input:focus,html[data-ui=lab] .field select:focus{border-color:var(--lab-a1);box-shadow:0 0 0 3px var(--lab-glow);outline:0}
+
+/* ---------------- đầu trang */
+html[data-ui=lab] .header.lab-header{background:color-mix(in srgb,var(--lab-card) 86%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--lab-line);position:sticky;top:0;z-index:20}
+html[data-ui=lab] .brand{color:var(--lab-ink)}
+html[data-ui=lab] .brand small{color:var(--lab-muted)}
+html[data-ui=lab][data-course=dl-11] .brand img{filter:brightness(0) invert(1)}
+html[data-ui=lab] .lab-chip{background:var(--lab-chip);color:var(--lab-chip-ink);border-color:transparent;border-radius:999px}
+
+/* ---------------- nền mạng động */
+.lab-net{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:.55}
+.lab-net line{stroke:var(--lab-net);stroke-width:1;stroke-dasharray:6 8;animation:lab-flow 6s linear infinite;opacity:.55}
+.lab-net circle{fill:var(--lab-net);animation:lab-pulse 3.2s ease-in-out infinite}
+@keyframes lab-flow{to{stroke-dashoffset:-140}}
+@keyframes lab-pulse{0%,100%{opacity:.35}50%{opacity:1}}
+
+/* ---------------- trang vào */
+.lab-gate{position:relative;min-height:calc(100dvh - 83px);overflow:hidden;background:radial-gradient(1200px 600px at 15% 10%,var(--lab-bg2),transparent),linear-gradient(160deg,var(--lab-bg),var(--lab-bg2))}
+.lab-gate-inner{position:relative;max-width:1150px;margin:auto;padding:56px 24px 64px;display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:center}
+.lab-gate-text h1{font-size:clamp(34px,5vw,60px);line-height:1.08;letter-spacing:-.035em;margin:10px 0 18px;max-width:640px;
+  background:linear-gradient(120deg,var(--lab-ink) 30%,var(--lab-a1) 70%,var(--lab-a2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.lab-lead{font-size:18px;max-width:560px}
+html[data-ui=lab] .intro-symbols{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px}
+html[data-ui=lab] .intro-symbols span{padding:12px 18px;border-radius:14px;background:var(--lab-card);color:var(--lab-a1);border:1px solid var(--lab-line);box-shadow:var(--lab-shadow);font-weight:800;font-family:"JetBrains Mono",Consolas,monospace}
+html[data-ui=lab][data-course=dl-11] .intro-symbols span{color:var(--lab-a2);box-shadow:0 0 18px var(--lab-glow)}
+.lab-facts{display:flex;gap:28px;margin:30px 0 0;padding:0}
+.lab-facts div{margin:0}.lab-facts dt{font-size:30px;font-weight:800;color:var(--lab-ink)}.lab-facts dd{margin:0;font-size:13px;color:var(--lab-muted)}
+html[data-ui=lab] .panel.lab-panel{background:var(--lab-card);border:1px solid var(--lab-line);border-radius:24px;box-shadow:var(--lab-shadow);padding:30px;position:relative}
+html[data-ui=lab] .panel.lab-panel::before{content:"";position:absolute;inset:-1px;border-radius:24px;padding:1px;background:linear-gradient(135deg,var(--lab-a1),transparent 40%,var(--lab-a2));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+
+/* ---------------- trang khoá */
+.lab-home{max-width:1200px}
+.lab-hero{position:relative;overflow:hidden;display:grid;grid-template-columns:1fr auto;gap:30px;align-items:center;padding:36px 38px;border-radius:28px;
+  background:linear-gradient(135deg,var(--lab-hero1),var(--lab-hero2));color:#fff;box-shadow:var(--lab-shadow)}
+.lab-hero .lab-net{opacity:.35}
+.lab-hero-text{position:relative}
+.lab-hero h1{color:#fff!important;margin:6px 0 10px;font-size:clamp(28px,4vw,46px)}
+.lab-hero p{color:rgba(255,255,255,.82)!important;max-width:620px}
+.lab-hero .eyebrow{color:rgba(255,255,255,.75)!important}
+.lab-hero .actions button{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.3)}
+.lab-hero-stats{position:relative;display:flex;align-items:center;gap:22px}
+.lab-hero .stats{flex-direction:column;gap:10px;margin:0}
+.lab-hero .stats div{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);color:#fff;padding:10px 16px;border-radius:14px}
+.lab-hero .stats small{color:rgba(255,255,255,.75)}
+.lab-ring{position:relative;width:136px;height:136px}
+.lab-ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.lab-ring circle{fill:none;stroke-width:12}
+.lab-ring-bg{stroke:rgba(255,255,255,.18)}
+.lab-ring-fg{stroke:url(#none);stroke:#fff;stroke-linecap:round;transition:stroke-dasharray .8s}
+.lab-ring-text{position:absolute;inset:0;display:grid;place-content:center;text-align:center;color:#fff}
+.lab-ring-text b{font-size:30px;line-height:1}.lab-ring-text small{font-size:15px;opacity:.75}.lab-ring-text span{font-size:12px;opacity:.8}
+html[data-ui=lab] .resume.lab-resume{margin-top:22px;background:var(--lab-card);border:1px solid var(--lab-line);border-radius:20px;padding:16px;box-shadow:var(--lab-shadow);display:flex;align-items:center;gap:18px}
+.lab-resume-img{width:150px;height:92px;flex-shrink:0;border-radius:14px;background:var(--lab-bg2) center/cover no-repeat;border:1px solid var(--lab-line)}
+.lab-resume-text{flex:1}.lab-resume-text h2{margin:4px 0;font-size:21px}
+html[data-ui=lab] .notice.lab-notice{background:transparent;border:0;padding:6px 2px;margin:12px 0 0;color:var(--lab-muted);font-size:13px}
+.lab-filters{margin:18px 0 6px;background:var(--lab-card);border:1px solid var(--lab-line);border-radius:16px;padding:10px 16px}
+.lab-filters summary{cursor:pointer;font-weight:700;padding:6px 0;color:var(--lab-ink)}
+.lab-filters .course-filters{margin:10px 0 6px}
+html[data-ui=lab] .course-filters label{color:var(--lab-muted)}
+
+.lab-journey{position:relative;margin-top:10px;padding-left:28px}
+.lab-journey::before{content:"";position:absolute;left:13px;top:20px;bottom:20px;width:3px;border-radius:3px;background:linear-gradient(var(--lab-a1),var(--lab-a2),var(--lab-a3))}
+.lab-module{position:relative;margin:26px 0 8px}
+.lab-module-head{display:flex;align-items:center;gap:14px;margin:0 0 14px}
+.lab-module-head h2{margin:0;font-size:22px}
+.lab-module-head .eyebrow{margin:0}
+.lab-module-no{position:absolute;left:-28px;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:14px;color:#fff;
+  background:linear-gradient(135deg,var(--lab-a1),var(--lab-a2));box-shadow:0 0 0 5px var(--lab-bg),0 0 16px var(--lab-glow)}
+.lab-module-progress{margin-left:auto;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--lab-muted);min-width:170px}
+.lab-module-progress i{flex:1;height:8px;border-radius:8px;background:var(--lab-line);position:relative;overflow:hidden}
+.lab-module-progress i::after{content:"";position:absolute;inset:0;width:calc(var(--p)*100%);background:linear-gradient(90deg,var(--lab-a1),var(--lab-a2));border-radius:8px}
+.grid.lab-grid{grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+html[data-ui=lab] .card.lab-card{padding:0;overflow:hidden;gap:0;background:var(--lab-card);border:1px solid var(--lab-line);border-radius:20px;color:var(--lab-ink);transition:transform .18s,box-shadow .18s,border-color .18s}
+html[data-ui=lab] .card.lab-card:hover{transform:translateY(-4px);border-color:var(--lab-a1);box-shadow:0 14px 34px var(--lab-glow)}
+.lab-cover{position:relative;height:130px;background:var(--lab-bg2) center/cover no-repeat;border-bottom:1px solid var(--lab-line)}
+.lab-cover::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(0,0,0,.28))}
+.lab-cover-empty{background:linear-gradient(135deg,var(--lab-hero1),var(--lab-hero2))}
+.lab-cover-icon{position:absolute;inset:0;display:grid;place-items:center;font-size:44px;color:rgba(255,255,255,.75)}
+.lab-num{position:absolute;left:12px;bottom:10px;z-index:1;min-width:38px;height:38px;padding:0 8px;border-radius:12px;display:grid;place-items:center;font-weight:800;font-size:17px;color:#fff;background:rgba(0,0,0,.45);backdrop-filter:blur(4px)}
+.lab-kind{position:absolute;right:10px;top:10px;z-index:1;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:5px 9px;border-radius:999px;color:#fff;background:var(--lab-a2)}
+.lab-kind-activity{background:var(--lab-a3);color:#1f1300}
+.lab-card-body{padding:14px 16px 14px;display:flex;flex-direction:column;gap:6px;flex:1}
+html[data-ui=lab] .lab-card h2{font-size:17px;margin:0;line-height:1.4}
+html[data-ui=lab] .lab-card .card-bottom{margin-top:auto;border-top:1px solid var(--lab-line)}
+.lab-state.is-done{color:#16A34A;font-weight:700}.lab-state.is-started{color:var(--lab-a3);font-weight:700}
+html[data-ui=lab] .footer{color:var(--lab-muted)}
+
+/* ---------------- thanh bài học (trong khung) */
+html[data-ui=lab] .bar{background:linear-gradient(90deg,var(--lab-hero1),var(--lab-hero2));border:0;color:#fff}
+html[data-ui=lab] .bar .title{color:#fff;font-weight:700;font-size:13px}
+html[data-ui=lab] .bar .status{color:rgba(255,255,255,.75)}
+html[data-ui=lab] .bar button{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.28)}
+html[data-ui=lab] .tools{background:var(--lab-card);color:var(--lab-ink);border-color:var(--lab-line)}
+html[data-ui=lab] dialog{background:var(--lab-card);color:var(--lab-ink);border-color:var(--lab-line)}
+
+@media(max-width:820px){
+  .lab-gate-inner{grid-template-columns:1fr;gap:26px;padding:28px 16px 40px}
+  .lab-gate-text h1{font-size:34px}
+  .lab-hero{grid-template-columns:1fr;padding:24px 20px}
+  .lab-hero-stats{justify-content:flex-start}
+  .lab-ring{width:110px;height:110px}
+  .lab-journey{padding-left:22px}
+  .lab-module-no{left:-22px;width:26px;height:26px;font-size:12px}
+  .lab-journey::before{left:10px}
+  .lab-module-head{flex-wrap:wrap}
+  .lab-module-progress{margin-left:0;min-width:100%}
+  .lab-resume-img{display:none}
+  html[data-ui=lab] .resume.lab-resume{flex-direction:column;align-items:stretch}
+}
+@media(prefers-reduced-motion:reduce){.lab-net line,.lab-net circle{animation:none!important}}
+/* trang bài: tiêu đề đã có trong đầu bài (iframe) nên ẩn ở thanh ngoài */
+html[data-ui=lab] .lesson-page .bar .title{visibility:hidden}
