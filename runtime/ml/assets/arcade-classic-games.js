@@ -2,9 +2,9 @@
 // Cùng khung với arcade-board-games.js: nhìn từ trên xuống, chạm/nhấp, phím mũi tên + Space/Enter, nút điều khiển.
 // Độ khó theo cấp 1–5 lấy từ LEVELS trong arcade-rules.js. Điểm game không ghi vào điểm học.
 import * as THREE from 'three';
-import {rng,param} from './arcade-rules.js?v=7daed2ac6a85';
+import {rng,param} from './arcade-rules.js?v=efe6e81231c3';
 import {minesState,minesReveal,minesFlag,minesCount,minesSafeHint,minesSureMine,g2048State,g2048Slide,g2048CanMove,lightsState,lightsPress,
- simonSequence,moleNext,sudokuMake,sudokuConflicts,sudokuDone,sudokuBox,caroWinner,caroBest,racerRow} from './arcade-classic-rules.js?v=7daed2ac6a85';
+ simonSequence,moleNext,sudokuMake,sudokuConflicts,sudokuDone,sudokuBox,caroWinner,caroBest,racerRow} from './arcade-classic-rules.js?v=efe6e81231c3';
 
 export const CLASSIC_TYPES=['mines','g2048','lights','simon','mole','sudoku','caro','racer'];
 const ARROWS=['ArrowUp','ArrowRight','ArrowDown','ArrowLeft'],STEP=[[0,-1],[1,0],[0,1],[-1,0]];

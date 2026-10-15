@@ -1,6 +1,6 @@
 // Luật thuần của 8 trò cổ điển thêm ngày 13/10/2026 (không cần renderer): Dò mìn, 2048, Tắt đèn, Nhớ màu, Đập chuột,
 // Sudoku, Cờ caro, Đua xe. Mọi bàn chơi tạo từ seed nên kiểm thử được và luôn có lời giải.
-import {rng,shuffle} from './arcade-rules.js?v=7daed2ac6a85';
+import {rng,shuffle} from './arcade-rules.js?v=efe6e81231c3';
 
 const around=(i,w,h)=>{const x=i%w,y=Math.floor(i/w),a=[];for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){if(!dx&&!dy)continue;const nx=x+dx,ny=y+dy;if(nx>=0&&ny>=0&&nx<w&&ny<h)a.push(ny*w+nx);}return a;};
 

@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import {param,rng,shuffle,slideBoard,slideMove,solveSlide,sokobanBoard,pushBox,solveSokoban,tetrisState,tetrisSpawn,tetrisMove,tetrisRotate,tetrisDrop,tetrisLock,fits,snakeState,snakeFood,snakeTurn,snakeStep} from './arcade-rules.js?v=7daed2ac6a85';
+import {param,rng,shuffle,slideBoard,slideMove,solveSlide,sokobanBoard,pushBox,solveSokoban,tetrisState,tetrisSpawn,tetrisMove,tetrisRotate,tetrisDrop,tetrisLock,fits,snakeState,snakeFood,snakeTurn,snakeStep} from './arcade-rules.js?v=efe6e81231c3';
 export function setupBoard({type,seed,level=3,art,scene,camera,canvas,control,status,active,win,lose,tone,held}){const P=k=>param(type,k,level);const group=new THREE.Group();scene.add(group);const random=rng(seed),ray=new THREE.Raycaster(),point=new THREE.Vector2(),pickable=[],cleanup=[];let s={},clock=0;
  const colors=[0x4a95c1,0xf1b84e,0x9b7fcc,0xdb7461,0x64b895,0xda8bae,0x6ac4c7];
  function ground(w,h){art.box(w+.5,.18,h+.5,0x2f4f62,0,-.14,0,group);art.box(w,.03,h,0x193847,0,-.03,0,group);}
