@@ -19,7 +19,7 @@ $('#close-modal').onclick=()=>modal.close();modal.addEventListener('click',e=>{i
 function updateNav(){
  $('#account').textContent=cloud.user?(cloud.profile?.display_name||'Tài khoản'):'Đăng nhập';$('#staff').hidden=!cloud.ready||cloud.role==='student';
  if(current&&allowed()){const s=state();$('.progressbar i')?.style.setProperty('width',((s.passed?.length||0)/4*100)+'%');
- document.querySelectorAll('.stage-list button').forEach((b,i)=>{if(i<4){b.disabled=!stageOpen(i);b.textContent=(s.passed?.includes(i)?'✓ ':'')+(i+1)+'. '+current.stages[i].title}})}
+ document.querySelectorAll('.stage-list button').forEach((b,i)=>{b.disabled=!stageOpen(i);if(i<4){b.textContent=(s.passed?.includes(i)?'✓ ':'')+(i+1)+'. '+current.stages[i].title}})}
 }
 function closeAuxiliary(){auxiliary?.dispose?.();auxiliary=null}
 function home(){parent.postMessage({type:'portal-back'},location.origin)}
@@ -63,6 +63,15 @@ function renderLab(){
 <article class="panel"><h2>Lịch sử thực hành</h2><p>Giữ tối đa 30 lần chạy/phiên bản, 3 bản sao lưu và khoảng 300 KB cho mỗi học sinh/bài. Khôi phục phiên bản chỉ đưa SQL vào trình soạn; khôi phục bản sao thay dữ liệu trong sandbox của bài đang mở.</p><button data-action="history-refresh">Làm mới lịch sử</button><p id="history-sync" class="tiny"></p><div id="history-list"></div></article>
  <article class="panel"><div class="eyebrow">${l.n>=7?'Thực hành MySQL / HeidiSQL':'Làm việc với bạn'}</div><h2>Đưa hiểu biết vào thực hành</h2><p>Hoàn thành các việc sau và ghi minh chứng để nộp giáo viên trên LMS. Những ô này là con tự ghi nhận, giáo viên sẽ đối chiếu.</p><form id="lab-form"><div class="checklist">${l.lab.map((x,i)=>`<label><input type="checkbox" name="lab-${i}" ${p.labChecks?.includes(i)?'checked':''}>${esc(x)}</label>`).join('')}</div><label class="field">Nhật kí / link minh chứng<textarea name="evidence" maxlength="4000" placeholder="Schema đã dùng, câu lệnh, kết quả, lỗi và cách sửa; hoặc đường dẫn minh chứng LMS.">${esc(p.evidence||'')}</textarea></label><button class="primary">Lưu nhật kí thực hành</button></form><p><a href="assets/mysql-starter.sql" download>Dữ liệu mẫu MySQL (.sql)</a> · <a href="assets/dataset.sql" download>Dữ liệu mẫu SQLite (.sql)</a></p><div class="notice warning">MySQL dùng CREATE DATABASE, USE, AUTO_INCREMENT và kiểu DATE; SQLite web dùng INTEGER PRIMARY KEY AUTOINCREMENT và ngày dạng văn bản ISO. File MySQL mẫu có dữ liệu hoàn chỉnh; buổi 9–10 hãy tự tạo cấu trúc trước khi dùng file để đối chiếu.</div></article>`;
  $('#sql').value=p.draft??l.mission.starter;renderHistory();
+ if(l.n===1){
+  const root=$('#lesson-body'),first=root.querySelector('article');first.querySelector('h2').textContent='Thực hành · Lọc và đọc kết quả';
+  first.querySelector('.notice').innerHTML='Dữ liệu mô phỏng: 18 lượt mượn. Chọn Tất cả rồi Chưa trả, chạy và đối chiếu số dòng. Con chưa cần tự viết SQL trong buổi này.';
+  const label=first.querySelector('.editor-label b');if(label)label.textContent='Truy vấn do máy sinh · có thể đọc thêm';
+  first.querySelectorAll('[data-action="save-version"],[data-action="inspect-schema"],[data-action="export"],[data-action="restore"]').forEach(el=>el.hidden=true);
+  const history=root.querySelector('#history-list')?.closest('article');if(history)history.hidden=true;
+  const form=root.querySelector('#lab-form');form.elements.evidence.placeholder='Ba câu hỏi quản lí, dữ liệu cần lưu và một kết quả con đã thử; hoặc link phiếu nộp Canvas.';
+  const lab=form.closest('article');lab.querySelector('.notice.warning')?.setAttribute('hidden','');lab.querySelector('a[href="assets/mysql-starter.sql"]')?.closest('p')?.setAttribute('hidden','');
+ }
  // Before the formal SQL lesson, learners explore with choices; generated SQL
  // is still executed by SQLite, rather than a fabricated result table.
  if(l.n<=4){
