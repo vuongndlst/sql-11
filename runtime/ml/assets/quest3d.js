@@ -10,10 +10,10 @@
  * Âm thanh tự tạo bằng Web Audio (không tải file nhạc). Máy yếu: tự chuyển chế độ nhẹ.
  */
 import * as THREE from "three";
-import {upgradeActor,addLandmark} from "./blender-art.js?v=1d939cc539e1";
-import {stationGame} from './quest-games.js?v=1d939cc539e1';
-import {assignStation,startStation,finishStation} from './arcade-selection.js?v=1d939cc539e1';
-import {levelFor} from './arcade-rules.js?v=1d939cc539e1';
+import {upgradeActor,addLandmark} from "./blender-art.js?v=3bb126547260";
+import {stationGame} from './quest-games.js?v=3bb126547260';
+import {assignStation,startStation,finishStation} from './arcade-selection.js?v=3bb126547260';
+import {levelFor} from './arcade-rules.js?v=3bb126547260';
 // Cấp game của một trạm (13/10/2026): bài sau, chặng sau khó hơn; tính theo vị trí bài trong cả khoá.
 function capTram(i){try{const C=window.PortalCloud,ds=window.STANDALONE?.lessons||[],key=C?.packet?.lesson?.lesson_key,me=ds.find(x=>x.key===key),pos=Number(me?.position??C?.packet?.lesson?.position)||1,max=Math.max(pos,...ds.map(x=>Number(x.position)||0));return levelFor(pos,max,i,B.chang.length);}catch{return 3;}}
 
@@ -875,19 +875,26 @@ if (CAM_UNG) document.body.appendChild(h("div", { class: "q-can-goi-y", text: "K
 const camXaMacDinh = () => innerWidth / innerHeight < 0.8 ? 17 : 13;   // màn hình dọc (iPad dọc, điện thoại): lùi xa hơn
 let camYaw = 0, camXa = camXaMacDinh(), dich = null;
 
+// Bộ gõ tiếng Việt (Telex, VNI) đổi e.key thành "Process", "ư", "đ"… và lúc nhả phím không khớp lúc nhấn,
+// nên nhân vật đứng yên hoặc chạy mãi. Phím điều khiển đọc theo VỊ TRÍ phím (e.code), không theo chữ gõ ra (19/10/2026).
+const MA_PHIM = { KeyW: "w", KeyA: "a", KeyS: "s", KeyD: "d", KeyE: "e", KeyM: "m", Space: " ", Enter: "enter",
+  NumpadEnter: "enter", Escape: "escape", ArrowUp: "arrowup", ArrowDown: "arrowdown", ArrowLeft: "arrowleft", ArrowRight: "arrowright" };
+const tenPhim = (e) => MA_PHIM[e.code] || (e.key || "").toLowerCase();
+const dangGo = (e) => { const t = e.target; return !!(t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))); };
 addEventListener("keydown", (e) => {
-  if (miniOpen) return;
-  if (khungMo) { if (e.key === "Escape") dongKhung(); return; }
+  if (miniOpen || dangGo(e)) return;
+  const k = tenPhim(e);
+  if (khungMo) { if (k === "escape") dongKhung(); return; }
   if (manDau && !manDau.classList.contains("an")) return;
-  const k = e.key.toLowerCase();
   if (["arrowup", "arrowdown", "arrowleft", "arrowright", " "].includes(k)) e.preventDefault();
-  if (k === "e" || k === "enter" || k === " ") { if (gan) vaoTram(gan); return; }
-  if (k === "m") { khoiDongAm(); datAm(!QS.am); return; }
+  if (k === "e" || k === "enter" || k === " ") { if (!e.repeat && gan) vaoTram(gan); return; }
+  if (k === "m") { if (!e.repeat) { khoiDongAm(); datAm(!QS.am); } return; }
   if (k === "escape") { moMenu(false); return; }
   PHIM.add(k); dich = null;
 });
-addEventListener("keyup", (e) => PHIM.delete(e.key.toLowerCase()));
+addEventListener("keyup", (e) => PHIM.delete(tenPhim(e)));
 addEventListener("blur", () => PHIM.clear());
+document.addEventListener("visibilitychange", () => { if (document.hidden) PHIM.clear(); });
 
 const cv = renderer.domElement;
 const keo = { id: null, x: 0, y: 0, di: 0 };
