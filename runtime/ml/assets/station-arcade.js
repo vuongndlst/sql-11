@@ -1,9 +1,9 @@
 import * as THREE from 'three';
-import {CATALOG,GAME_TYPES,goalFor,lv,MAX_LEVEL} from './arcade-rules.js?v=efe6e81231c3';
-import {createArt} from './arcade-art.js?v=efe6e81231c3';
-import {setupAction} from './arcade-action-games.js?v=efe6e81231c3';
-import {setupBoard} from './arcade-board-games.js?v=efe6e81231c3';
-import {setupClassic,CLASSIC_TYPES} from './arcade-classic-games.js?v=efe6e81231c3';
+import {CATALOG,GAME_TYPES,goalFor,lv,MAX_LEVEL} from './arcade-rules.js?v=1d939cc539e1';
+import {createArt} from './arcade-art.js?v=1d939cc539e1';
+import {setupAction} from './arcade-action-games.js?v=1d939cc539e1';
+import {setupBoard} from './arcade-board-games.js?v=1d939cc539e1';
+import {setupClassic,CLASSIC_TYPES} from './arcade-classic-games.js?v=1d939cc539e1';
 
 // A single bounded session. Arcade scores never write academic XP or stage completion.
 export function stationGame({theme,seed=1,gameType,seconds,level=3,title='',sound=true,onEnter,onCancel,onStart=()=>true,onFinish=()=>{}}){

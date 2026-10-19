@@ -5,6 +5,7 @@ window.LessonLearning=(C)=>{
  document.body.classList.add('learning-focus');if(embedded)document.body.classList.add('station-focus','focus-hide-nav');
  const panel=document.createElement('details');panel.className='learning-panel';panel.id='learning-overview';
  panel.innerHTML=`<summary>Mục tiêu · sản phẩm · cách hoàn thành</summary><p class="learning-eyebrow">${esc(M.topic)} · ${esc(M.minutes)} (tham khảo)</p><div class="learning-grid"><div><h3>Con sẽ làm được</h3><ul>${M.objectives.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div><div><h3>Sản phẩm cần làm</h3><p>${esc(M.product)}</p><h3>Điều kiện hoàn thành</h3><p>${esc(M.completion)}</p></div></div><h3>Ôn nhanh nếu cần</h3><ul>${M.prerequisites.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><div class="learning-flow" aria-label="Cách học"><span>Dự đoán</span><b>→</b><span>Tự thử</span><b>→</b><span>Giải thích bằng kết quả</span></div><p>Kiến thức trước là gợi ý ôn tập; con vẫn có thể chọn bài để học.</p>`;
+ if(kind==='cpp')panel.innerHTML=`<summary>Em sẽ học gì?</summary><ul>${M.objectives.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><p>${esc(M.completion)}</p><p>Đọc ví dụ, làm ngay ở ô code bên dưới, rồi xem phản hồi. Tiếp tục đọc theo thứ tự từ trên xuống.</p>`;
  let previous='';
  function currentStage(){
   if(kind==='cpp'||kind==='python'){const active=document.querySelector('#stepContainer article')?.dataset.stage||C.peek().active;const index=M.stages.findIndex(s=>s.id===active);return {index:Math.max(0,index),id:active||M.stages[0]?.id,final:M.stages[index]?.id?.includes('boss')||false};}
@@ -18,7 +19,7 @@ window.LessonLearning=(C)=>{
   const root=rootForPanel();if(!root)return;if(!document.contains(panel)){root.prepend(panel);}
   const st=currentStage();const stage=M.stages[st.index];
   const reflectionRoot=kind==='sql'?document.querySelector('#lesson-body'):root;
-  if(stage&&reflectionRoot&&!reflectionRoot.querySelector('#learning-reflection')){
+  if(kind!=='cpp'&&stage&&reflectionRoot&&!reflectionRoot.querySelector('#learning-reflection')){
    const box=document.createElement('details');box.className='learning-panel learning-reflection';box.id='learning-reflection';box.innerHTML=`<summary>Dự đoán · thử · giải thích</summary><p>${esc(stage.reflection||'Ghi nhận kết quả đã thử và giải thích bằng minh chứng.')}</p><textarea rows="3" maxlength="1800" aria-label="Nhận xét của con" placeholder="Con dự đoán… Khi thử… Kết quả cho thấy…"></textarea><p class="hint">Lưu trong bài làm trên trình duyệt. Không dùng nhận xét này để khóa chặng.</p>`;
    const input=box.querySelector('textarea');input.value=C.peek().learningNotes?.[st.id]||'';input.oninput=()=>C.save(key,{...C.peek(),learningNotes:{...C.peek().learningNotes,[st.id]:input.value}});reflectionRoot.append(box);
   }
@@ -40,13 +41,15 @@ window.LessonLearning=(C)=>{
   if(e.target.closest('.nova-close,.bit-close,#bitClose'))sessionStorage.removeItem('lsts-hints-open:'+C.user.id);
  },true);
  function summarySection(title,body,id){const box=document.createElement('details');box.className='learning-panel';box.id=id;box.innerHTML=`<summary>${esc(title)}</summary>${body}`;return box;}
+ if(kind!=='cpp'){
  const video=summarySection('Tóm tắt tiếng Việt · gợi ý xem video',`<ol>${M.video_summary.map(x=>`<li>${esc(x)}</li>`).join('')}</ol>`,'learning-video');
  const submit=summarySection('Sản phẩm của bài',`<ol>${M.submission.filter(x=>!/bản sao|ban sao|backup/i.test(x)).map(x=>`<li>${esc(x)}</li>`).join('')}</ol><label>Điều con làm được / điều còn khó</label><textarea id="learning-feedback" maxlength="1000" rows="2"></textarea>`,'learning-submit');
- const support=document.createElement('section');support.id='learning-support';support.append(video,submit);document.body.append(support);
+ const support=document.createElement('section');support.id='learning-support';if(!M.hide_video_summary)support.append(video);support.append(submit);document.body.append(support);
  const feedback=support.querySelector('#learning-feedback');feedback.value=C.peek().lessonFeedback||'';feedback.oninput=()=>C.save(key,{...C.peek(),lessonFeedback:feedback.value});
  if(M.catchup){const help=summarySection('Tự học bù · web và HeidiSQL',M.catchup.html,'learning-catchup');support.prepend(help);}
  if(M.differentiation){const d=M.differentiation;support.prepend(summarySection('Cốt lõi và mở rộng của buổi học',`<h3>Cốt lõi</h3><ul>${d.core.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><h3>Thử sức khi có thời gian</h3><ul>${d.extension.map(x=>`<li>${esc(x)}</li>`).join('')}</ul><p>Checkpoint hiện hành được giữ để ôn kiến thức; không bắt chạy toàn bộ phần mở rộng trong một buổi.</p>`,'learning-differentiation'));}
  if(M.projects?.length){const projects=document.createElement('section');projects.id='learning-projects';projects.className='learning-panel';projects.innerHTML='<h2>Dự án nhỏ · luyện tập tùy chọn</h2><p>Dùng kiến thức đã học, giữ test case và giải thích sản phẩm. Không ảnh hưởng điều kiện chứng chỉ bài.</p>';for(const project of M.projects)mountProject(project,projects);support.append(projects);}
+ }
  function mountProject(project,root){
   const box=document.createElement('details');box.className='learning-project';box.dataset.project=project.id;const old=C.peek().miniProjects?.[project.id]||{};
   box.innerHTML=`<summary>${esc(project.title)}</summary><p>${esc(project.prompt)}</p><p><b>Đầu vào/kết quả cần đạt:</b> ${esc(project.contract)}</p><div class="learning-flow"><span>Lập kế hoạch</span><b>→</b><span>Chạy và kiểm thử</span><b>→</b><span>Giải thích</span></div><label>Mã của con<textarea class="project-code" rows="9" maxlength="15000" spellcheck="false"></textarea></label><label>Dữ liệu nhập (mỗi dòng một lần nhập)<textarea class="project-input" rows="2" maxlength="1000"></textarea></label><div class="learning-actions"><button class="project-run">Chạy mã</button><button class="project-test">Chạy test case</button><button class="project-download">Tải sản phẩm</button></div><pre class="project-output" role="status">Kết quả sẽ hiện ở đây.</pre><label>Giải thích và hạn chế<textarea class="project-reflection" rows="3" maxlength="2000"></textarea></label><table><thead><tr><th>Tiêu chí</th><th>Minh chứng để đạt</th></tr></thead><tbody>${project.rubric.map(r=>`<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td></tr>`).join('')}</tbody></table><p>Lưu cục bộ; nộp sản phẩm qua Canvas theo hướng dẫn giáo viên.</p>`;
@@ -61,6 +64,6 @@ window.LessonLearning=(C)=>{
  }
  let timer;const observer=new MutationObserver(()=>{clearTimeout(timer);timer=setTimeout(annotate,40)});observer.observe(document.body,{childList:true,subtree:true});annotate();
  window.LearningSupport={currentStage,returnToWorld};
- LessonMissingTasks(C,currentStage,rootForPanel);
+ if(kind!=='cpp')LessonMissingTasks(C,currentStage,rootForPanel);
 };
 

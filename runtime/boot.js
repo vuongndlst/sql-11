@@ -1,5 +1,6 @@
 (async()=>{'use strict';
  const originBase=new URL('.',location.href),C=PortalCloud;
+ if(window.STANDALONE?.course==='cpp-8-v2')window.PORTAL_RUNTIME_VERSION+='-tasks20261018';
  const asset=src=>{const u=new URL(src,originBase);u.searchParams.set('v',window.PORTAL_RUNTIME_VERSION);return u.href};
  const script=src=>new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=asset(src);s.onload=resolve;s.onerror=()=>reject(Error('asset_failed'));document.head.append(s)});
  const css=href=>{const l=document.createElement('link');l.rel='stylesheet';l.href=asset(href);document.head.append(l)};
@@ -18,7 +19,7 @@
  C.init=init;
  }else if(kind==='python'||kind==='cpp'){
  base(kind+'/lesson/');const upper=kind==='python'?'PY':'CPP';window[upper+'_LESSON_KEY']=p.lesson.lesson_key;window[upper==='PY'?'PY10_CLOUD_CONFIG':'CPP8_CLOUD_CONFIG']={...PORTAL_CONFIG,runId:p.run_id};window[kind==='python'?'PyCloud':'CppCloud']=C;window[upper+'Account']={student:account,controls:()=>{},profile:()=>parent.postMessage({type:'portal-account'},location.origin)};
- if(kind==='python')css('python/engine/style.css');else{for(const f of ['base.css','game.css','school.css'])css('cpp/engine/'+f);await script('cpp/engine/scratchblocks.min.js');await script('cpp/engine/scratchblocks-vi.js')}
+ if(kind==='python')css('python/engine/style.css');else{for(const f of ['base.css','game.css','school.css','syntax.css','task-guide.css'])css('cpp/engine/'+f);await script('cpp/engine/syntax.js');await script('cpp/engine/scratchblocks.min.js');await script('cpp/engine/scratchblocks-vi.js')}
  await script(kind+'/engine/kit.js');const payload=document.createElement('script');payload.textContent=p.payload.source;document.head.append(payload);payload.remove();window.LESSON.media=p.payload.media;document.body.innerHTML='';await script(kind+'/engine/media.js');if(kind==='cpp')await script('cpp/engine/cpp-runner.js');await script(kind+'/engine/engine.js');
  }else if(kind==='ml'){
  base('ml/'+p.lesson.lesson_key+'/');css('ml/assets/style.css');css('ml/assets/chu_de.css');if(window.STANDALONE?.ui==='lab'){document.documentElement.dataset.ui='lab';document.documentElement.dataset.course=STANDALONE.course;css('ml/assets/lab-lesson.css')}window.BAI=p.payload.data;

@@ -1,4 +1,5 @@
 window.LessonMissingTasks=(C,currentStage,rootForPanel)=>{
+ if(C.packet.payload.kind==='cpp')return;
  const kind=C.packet.payload.kind,box=document.createElement('aside');box.id='learning-missing';box.className='learning-missing';box.setAttribute('aria-label','Việc còn thiếu');const info=document.createElement('span'),button=document.createElement('button');button.type='button';button.textContent='Đến nhiệm vụ chưa xong';box.append(info,button);
  const item=(el,label)=>el?{el,label}:null;
  function collect(){const s=C.peek(),st=currentStage();
