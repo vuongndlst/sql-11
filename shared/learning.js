@@ -64,6 +64,6 @@ window.LessonLearning=(C)=>{
  }
  let timer;const observer=new MutationObserver(()=>{clearTimeout(timer);timer=setTimeout(annotate,40)});observer.observe(document.body,{childList:true,subtree:true});annotate();
  window.LearningSupport={currentStage,returnToWorld};
- if(kind!=='cpp')LessonMissingTasks(C,currentStage,rootForPanel);
+ // 19/10/2026: bỏ nút "Đến nhiệm vụ chưa xong" ở mọi khoá — HS bấm là nhảy qua phần lý thuyết.
 };
 
